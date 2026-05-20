@@ -1,0 +1,312 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f5f0ee;
+  --foreground: #3d2b2b;
+  --burgundy: #633236;
+  --burgundy-dark: #4a2528;
+  --sun-yellow: #fbbf24;
+  --sun-amber: #d97706;
+  --sun-dark: #92400e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.checkin-page {
+  background: var(--background);
+}
+
+/* ─── Odometer ──────────────────────────────── */
+
+.odometer-digit-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 2.25rem;
+  background: var(--burgundy);
+  border-radius: 0.3rem;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .odometer-digit-box {
+    width: 2.25rem;
+    height: 2.75rem;
+  }
+}
+
+.odometer-digit-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  display: inline-block;
+}
+
+@media (min-width: 768px) {
+  .odometer-digit-text {
+    font-size: 1.5rem;
+  }
+}
+
+.odometer-flip {
+  animation: odometerFlip 0.3s ease-in-out;
+}
+
+@keyframes odometerFlip {
+  0%   { transform: translateY(0);    opacity: 1; }
+  45%  { transform: translateY(-120%); opacity: 0; }
+  55%  { transform: translateY(120%);  opacity: 0; }
+  100% { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─── Sun panel (full screen) ───────────────── */
+
+.sun-panel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #fffbeb 0%, #fef3c7 40%, #fde68a 100%);
+}
+
+/* Horizon line — decorative, always visible */
+.horizon-line {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 68%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(217, 119, 6, 0.4) 15%,
+    rgba(180, 94, 12, 0.7) 50%,
+    rgba(217, 119, 6, 0.4) 85%,
+    transparent
+  );
+  border-radius: 2px;
+  z-index: 2;
+}
+
+/* Idle waiting label */
+.idle-label {
+  position: absolute;
+  top: 73%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  color: rgba(146, 64, 14, 0.5);
+  font-style: italic;
+  white-space: nowrap;
+  z-index: 3;
+  animation: idlePulse 3s ease-in-out infinite;
+}
+
+@keyframes idlePulse {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
+}
+
+/* ─── Fixed sun ─────────────────────────────── */
+
+/*
+  Sun is always centered in the upper portion of the panel.
+  Does not move — rays spin and eyes animate continuously.
+*/
+.sun-scene-fixed {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}
+
+/* ─── Sun wrapper + rays ────────────────────── */
+
+.sun-wrapper {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  flex-shrink: 0;
+}
+
+.sun-rays-ring {
+  position: absolute;
+  inset: 0;
+}
+
+.sun-rays-ring--spinning {
+  animation: sunRaysRotate 9s linear infinite;
+}
+
+@keyframes sunRaysRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/*
+  Each ray: pivot at its left edge (placed at wrapper center),
+  rotated to angle, then pushed outward 75px.
+*/
+.sun-ray {
+  position: absolute;
+  top: calc(50% - 3px);
+  left: 50%;
+  width: 30px;
+  height: 6px;
+  background: var(--sun-amber);
+  border-radius: 3px;
+  transform-origin: 0 50%;
+  /* 110px = sun radius (95px) + 15px gap */
+  transform: rotate(calc(var(--ray-i) * 45deg)) translateX(110px);
+}
+
+/* ─── Sun body + eyes ───────────────────────── */
+
+.sun-body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 190px;
+  height: 190px;
+  background: var(--sun-yellow);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 6px rgba(251, 191, 36, 0.3),
+    0 0 70px rgba(251, 191, 36, 0.5),
+    0 0 140px rgba(251, 191, 36, 0.2);
+}
+
+.sun-eyes {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.sun-eye {
+  width: 18px;
+  height: 18px;
+  background: var(--sun-dark);
+  border-radius: 50%;
+  animation: eyeMove 2.4s ease-in-out infinite;
+}
+
+.sun-eye:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+@keyframes eyeMove {
+  0%   { transform: translateX(-5px); }
+  50%  { transform: translateX(5px); }
+  100% { transform: translateX(-5px); }
+}
+
+/* ─── Floating photo cards ──────────────────── */
+
+/*
+  Each check-in photo appears at a random pre-defined position around
+  the sun. The card is centered on that position via translate(-50%,-50%).
+*/
+.photo-float {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  max-width: 170px;
+  pointer-events: none;
+}
+
+.photo-float--fade-in {
+  animation: photoAppear 0.8s ease-out forwards;
+}
+
+.photo-float--visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.photo-float--fade-out {
+  animation: photoDisappear 0.8s ease-in forwards;
+}
+
+@keyframes photoAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes photoDisappear {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+}
+
+.photo-float-img {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--sun-yellow);
+  box-shadow: 0 6px 24px rgba(251, 191, 36, 0.6);
+  flex-shrink: 0;
+}
+
+.photo-float-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--sun-dark);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+  line-height: 1.2;
+}
+
+.photo-float-message {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #b45309;
+  text-align: center;
+  max-width: 170px;
+  line-height: 1.45;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
