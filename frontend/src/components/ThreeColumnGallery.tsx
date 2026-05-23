@@ -4,13 +4,26 @@ import Image from 'next/image';
 import { API_URL } from '@/lib/config';
 import type { NewCheckinPayload } from '@/lib/types';
 
-const CARD_GAP = 16;
+const GALLERY_LAYOUT = {
+  default: {
+    cardGap: 16,
+    photoHeight: 240,
+    messageMinHeight: 80,
+  },
+  light: {
+    cardGap: 34,
+    photoHeight: 1140,
+    messageMinHeight: 475,
+  },
+} as const;
+
 const PX_PER_SEC = 40;
 
 interface ThreeColumnGalleryProps {
   checkins: NewCheckinPayload[];
   galleryEpoch: number;
   highlightId: number | null;
+  variant?: keyof typeof GALLERY_LAYOUT;
 }
 
 function splitIntoColumns(items: NewCheckinPayload[]) {
@@ -24,19 +37,22 @@ function Column({
   direction,
   galleryEpoch,
   highlightId,
+  variant,
 }: {
   items: NewCheckinPayload[];
   direction: 'up' | 'down';
   galleryEpoch: number;
   highlightId: number | null;
+  variant: keyof typeof GALLERY_LAYOUT;
 }) {
   if (items.length === 0) {
     return <div className="gallery-col gallery-col--empty" />;
   }
 
+  const { cardGap, photoHeight, messageMinHeight } = GALLERY_LAYOUT[variant];
+  const entryHeight = photoHeight + cardGap + messageMinHeight;
   const doubled = [...items, ...items];
-  const cardH = 330;
-  const stripH = items.length * (cardH + CARD_GAP);
+  const stripH = items.length * (entryHeight + cardGap);
   const duration = Math.max(stripH / PX_PER_SEC, 12);
 
   const msgColors = ['#FFA724', '#D93B16'];
@@ -85,28 +101,36 @@ export function ThreeColumnGallery({
   checkins,
   galleryEpoch,
   highlightId,
+  variant = 'default',
 }: ThreeColumnGalleryProps) {
   const columns = splitIntoColumns(checkins);
 
   return (
-    <div className="gallery-three-col">
+    <div
+      className={`gallery-three-col${
+        variant === 'light' ? ' gallery-three-col--light' : ''
+      }`}
+    >
       <Column
         items={columns[0]}
         direction="up"
         galleryEpoch={galleryEpoch}
         highlightId={highlightId}
+        variant={variant}
       />
       <Column
         items={columns[1]}
         direction="down"
         galleryEpoch={galleryEpoch}
         highlightId={highlightId}
+        variant={variant}
       />
       <Column
         items={columns[2]}
         direction="up"
         galleryEpoch={galleryEpoch}
         highlightId={highlightId}
+        variant={variant}
       />
     </div>
   );

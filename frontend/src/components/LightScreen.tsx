@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { DarkOdometerCounter } from '@/components/DarkOdometerCounter';
 import { SlideToCheckIn } from '@/components/SlideToCheckIn';
+import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
 import { useLanguage } from '@/lib/i18n/context';
 import type { NewCheckinPayload } from '@/lib/types';
 
@@ -15,9 +16,9 @@ interface LightScreenProps {
 
 export function LightScreen({
   count,
-  checkins: _checkins,
-  galleryEpoch: _galleryEpoch,
-  highlightId: _highlightId,
+  checkins,
+  galleryEpoch,
+  highlightId,
 }: LightScreenProps) {
   const { t } = useLanguage();
 
@@ -43,6 +44,21 @@ export function LightScreen({
           className="display-logo display-logo--right"
           priority
         />
+      </div>
+
+      <div className="light-screen-gallery">
+        {checkins.length > 0 ? (
+          <ThreeColumnGallery
+            checkins={checkins}
+            galleryEpoch={galleryEpoch}
+            highlightId={highlightId}
+            variant="light"
+          />
+        ) : (
+          <div className="gallery-empty">
+            <p>{t('display.galleryEmpty')}</p>
+          </div>
+        )}
       </div>
 
       <div className="light-sun-area">
@@ -74,24 +90,6 @@ export function LightScreen({
         </div>
         <SlideToCheckIn variant="wide" />
       </div>
-
-      {/* <div className="display-idle">
-        <div className="display-right">
-          {checkins.length > 0 ? (
-            <ThreeColumnGallery
-              checkins={checkins}
-              galleryEpoch={galleryEpoch}
-              highlightId={highlightId}
-            />
-          ) : (
-            <div className="gallery-empty">
-              <p>{t('display.galleryEmpty')}</p>
-            </div>
-          )}
-        </div>
-
-        <div className="display-bottom-gradient" aria-hidden="true" />
-      </div> */}
     </main>
   );
 }

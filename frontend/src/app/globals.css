@@ -112,7 +112,7 @@ body {
   right: 0;
   width: 100%;
   height: 431px;
-  z-index: 0;
+  z-index: 2;
   pointer-events: none;
   background: linear-gradient(
     to bottom,
@@ -129,7 +129,7 @@ body {
   right: 0;
   width: 100%;
   height: 800px;
-  z-index: 0;
+  z-index: 2;
   pointer-events: none;
   background: linear-gradient(#ed8e0000 0%, #e68a00 100%);
 }
@@ -337,7 +337,7 @@ body {
   position: absolute;
   top: 240px;
   left: 379px;
-  z-index: 1;
+  z-index: 3;
   width: 860px;
   height: 850px;
   pointer-events: none;
@@ -390,7 +390,7 @@ body {
   top: 1050px;
   left: calc(379px + 860px / 2);
   transform: translateX(-50%);
-  z-index: 1;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -657,6 +657,70 @@ body {
   color: rgba(0, 0, 0, 0.25);
   font-size: 1.1rem;
   font-style: italic;
+}
+
+.light-screen-gallery {
+  position: absolute;
+  top: 0;
+  right: 200px;
+  bottom: 0;
+  z-index: 1;
+  width: calc(600px * 3 + 36px * 2);
+  overflow: hidden;
+}
+
+.light-screen-gallery .gallery-three-col--light {
+  gap: 36px;
+  height: 100%;
+  padding: 0;
+}
+
+.light-screen-gallery .gallery-col {
+  flex: none;
+  width: 600px;
+}
+
+.light-screen-gallery .gallery-col-strip {
+  gap: 34px;
+}
+
+.light-screen-gallery .gallery-entry {
+  gap: 34px;
+  border-radius: 0;
+}
+
+.light-screen-gallery .gallery-photo-card {
+  width: 600px;
+  height: 1140px;
+  border-radius: 24px;
+}
+
+.light-screen-gallery .gallery-msg-card {
+  width: 600px;
+  min-height: 475px;
+  padding: 32px 36px 28px;
+  border-radius: 24px;
+  box-sizing: border-box;
+}
+
+.light-screen-gallery .gallery-msg-text {
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 1.45;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  display: block;
+}
+
+.light-screen-gallery .gallery-msg-name {
+  margin-top: auto;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  font-style: normal;
+  text-align: right;
+  line-height: 1.2;
 }
 
 /* ─── Check-in form page (mobile) ──────────── */
