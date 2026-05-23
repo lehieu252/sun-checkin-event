@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { FormEvent, useState } from 'react';
 import { API_URL } from '@/lib/config';
 
@@ -20,7 +21,6 @@ export default function CheckinPage() {
     if (preview) URL.revokeObjectURL(preview);
     setPhoto(file);
     setPreview(URL.createObjectURL(file));
-    // Increment key so the same file can be re-selected next time
     setInputKey((k) => k + 1);
   };
 
@@ -65,14 +65,14 @@ export default function CheckinPage() {
   if (status === 'success') {
     return (
       <main className="checkin-page flex min-h-screen items-center justify-center p-6">
-        <div className="flex max-w-md flex-col items-center gap-6 rounded-3xl bg-white p-10 text-center shadow-xl">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#633236] text-4xl text-white">
+        <div className="flex max-w-md flex-col items-center gap-6 p-10 text-center">
+          <div className="checkin-success-icon flex h-20 w-20 items-center justify-center rounded-full text-4xl text-white">
             ✓
           </div>
-          <h1 className="text-2xl font-bold text-[#633236]">
+          <h1 className="text-2xl font-bold text-[#3f1700]">
             Check-in thành công!
           </h1>
-          <p className="text-[#5a4545]">
+          <p className="text-[#6b4a2e]">
             Cảm ơn bạn đã tham gia. Hãy nhìn lên màn hình lớn nhé!
           </p>
         </div>
@@ -84,17 +84,29 @@ export default function CheckinPage() {
     <main className="checkin-page flex min-h-screen items-center justify-center p-4">
       <form
         onSubmit={handleSubmit}
-        className="flex w-full max-w-md flex-col gap-5 rounded-3xl bg-white p-6 shadow-xl md:p-8"
+        className="checkin-form flex w-full max-w-md flex-col gap-5 p-6 md:p-8"
       >
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#633236]">Check-in Sự kiện</h1>
-          <p className="mt-1 text-sm text-[#8a7070]">
-            Điền thông tin để tham gia sự kiện
-          </p>
+        <div className="checkin-header">
+          <Image
+            src="/sun.svg"
+            alt=""
+            width={160}
+            height={110}
+            className="checkin-sun-img"
+            priority
+          />
+          <Image
+            src="/plug_in_evolution.svg"
+            alt="Plug in to evolution"
+            width={320}
+            height={38}
+            className="checkin-plug-logo"
+            priority
+          />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#3d2b2b]">
+          <label className="checkin-label mb-1 block text-sm font-medium">
             Tên của bạn *
           </label>
           <input
@@ -102,13 +114,13 @@ export default function CheckinPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Nhập tên của bạn"
-            className="w-full rounded-xl border border-[#e0d5d5] px-4 py-3 text-[#3d2b2b] outline-none focus:border-[#633236] focus:ring-2 focus:ring-[#633236]/20"
+            className="checkin-input w-full rounded-xl border px-4 py-3 outline-none"
             required
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#3d2b2b]">
+          <label className="checkin-label mb-1 block text-sm font-medium">
             Lời nhắn *
           </label>
           <textarea
@@ -116,17 +128,16 @@ export default function CheckinPage() {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Viết lời nhắn của bạn..."
             rows={3}
-            className="w-full resize-none rounded-xl border border-[#e0d5d5] px-4 py-3 text-[#3d2b2b] outline-none focus:border-[#633236] focus:ring-2 focus:ring-[#633236]/20"
+            className="checkin-input w-full resize-none rounded-xl border px-4 py-3 outline-none"
             required
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-[#3d2b2b]">
+          <label className="checkin-label mb-1 block text-sm font-medium">
             Ảnh của bạn *
           </label>
 
-          {/* Không dùng capture="user" để iOS Safari hiển thị menu Photo Library / Take Photo */}
           <input
             key={inputKey}
             id="photo-input"
@@ -137,9 +148,8 @@ export default function CheckinPage() {
           />
 
           {preview ? (
-            /* Preview + nút chụp lại */
             <div className="flex flex-col items-center gap-3">
-              <div className="h-36 w-36 overflow-hidden rounded-full border-4 border-[#633236] shadow-md">
+              <div className="checkin-photo-ring h-36 w-36 overflow-hidden rounded-full border-4 shadow-md">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={preview}
@@ -149,22 +159,20 @@ export default function CheckinPage() {
               </div>
               <label
                 htmlFor="photo-input"
-                className="flex cursor-pointer items-center gap-2 rounded-xl border border-[#c4b0b0] px-5 py-2 text-sm text-[#633236] transition-colors hover:border-[#633236] hover:bg-[#faf7f5]"
+                className="checkin-btn-secondary flex cursor-pointer items-center gap-2 rounded-xl border px-5 py-2 text-sm"
               >
                 <span>🔄</span> Chọn ảnh khác
               </label>
             </div>
           ) : (
-            /* Nút mở camera — dùng <label> để kích hoạt input an toàn trên mọi trình duyệt */
             <label
               htmlFor="photo-input"
-              className="flex w-full cursor-pointer flex-col items-center gap-3 rounded-2xl bg-[#633236] py-7 text-white shadow-md transition-opacity hover:opacity-90 active:opacity-80"
+              className="checkin-camera-btn flex w-full cursor-pointer flex-col items-center rounded-2xl active:opacity-80"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className="h-10 w-10"
               >
                 <path d="M12 9a3.75 3.75 0 1 0 0 7.5A3.75 3.75 0 0 0 12 9Z" />
                 <path
@@ -173,8 +181,10 @@ export default function CheckinPage() {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="text-base font-semibold">Chụp ảnh</span>
-              <span className="text-xs text-white/70">Mở camera để chụp ảnh của bạn</span>
+              <span className="text-sm font-semibold">Chụp ảnh</span>
+              <span className="checkin-camera-btn-sub text-xs">
+                Mở camera để chụp ảnh hoặc chọn từ thư viện ảnh
+              </span>
             </label>
           )}
         </div>
@@ -188,9 +198,9 @@ export default function CheckinPage() {
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="rounded-xl bg-[#633236] py-4 text-lg font-semibold text-white transition-colors hover:bg-[#7a3f44] disabled:opacity-60"
+          className="checkin-btn-primary rounded-xl py-4 text-lg font-semibold disabled:opacity-60"
         >
-          {status === 'submitting' ? 'Đang gửi...' : 'Check-in ngay'}
+          {status === 'submitting' ? 'Đang gửi...' : 'Check in'}
         </button>
       </form>
     </main>

@@ -396,10 +396,10 @@ export default function DisplayPage() {
       {celebration && (
         <div className="celebration-msg">
           <p className="celebration-thanks">
-            Cảm ơn {celebration.person.name}
+            Cảm ơn {celebration.person.name} đã trở thành một phần của Mặt Trời
           </p>
           <p className="celebration-order">
-            Bạn là người check in thứ {celebration.count}
+            Bạn là tia sáng Mặt Trời thứ {celebration.count} được kích hoạt
           </p>
         </div>
       )}

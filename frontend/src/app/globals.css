@@ -325,6 +325,7 @@ body {
 .celebration-order {
   font-size: 1.4rem;
   line-height: 1.4;
+  color: #3F1700;
 }
 
 /* ─── Three-column gallery ─────────────────── */
@@ -474,7 +475,97 @@ body {
 /* ─── Check-in form page (mobile) ──────────── */
 
 .checkin-page {
-  background: #f5f0ee;
+  background: #f8fbea;
+  color: #3f1700;
+  font-family: var(--font-google-sans), var(--font-geist-sans), sans-serif;
+}
+
+.checkin-form {
+  background: #f8fbea;
+}
+
+.checkin-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkin-sun-img {
+  width: auto;
+  height: clamp(100px, 28vw, 140px);
+}
+
+.checkin-plug-logo {
+  width: min(100%, 320px);
+  height: auto;
+}
+
+.checkin-label {
+  color: #3f1700;
+}
+
+.checkin-input {
+  border-color: #f0e6d8;
+  color: #3f1700;
+  background: white;
+}
+
+.checkin-input:focus {
+  border-color: #ffa724;
+  box-shadow: 0 0 0 2px rgba(255, 167, 36, 0.2);
+}
+
+.checkin-btn-primary {
+  background: #ffa724;
+  color: white;
+  transition: opacity 0.2s ease;
+}
+
+.checkin-btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.checkin-camera-btn {
+  padding: 20px 16px;
+  gap: 8px;
+  background: white;
+  border: 2px dashed #ffa724;
+  color: #ffa724;
+  transition: background 0.2s ease;
+}
+
+.checkin-camera-btn:hover {
+  background: #fff7ed;
+}
+
+.checkin-camera-btn svg {
+  width: 32px;
+  height: 32px;
+}
+
+.checkin-camera-btn-sub {
+  color: #6b4a2e;
+}
+
+.checkin-btn-secondary {
+  border-color: #f0dcc8;
+  color: #3f1700;
+  background: white;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.checkin-btn-secondary:hover {
+  border-color: #ffa724;
+  background: #fff7ed;
+}
+
+.checkin-photo-ring {
+  border-color: #ffa724;
+}
+
+.checkin-success-icon {
+  background: linear-gradient(135deg, #ffa724 0%, #d93b16 100%);
 }
 
 /* ─── Admin page ───────────────────────────── */
