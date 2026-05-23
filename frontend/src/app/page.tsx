@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { QRCodeSVG } from 'qrcode.react';
 import { DarkScreen } from '@/components/DarkScreen';
+import { DisplayKioskPrompt } from '@/components/DisplayKioskPrompt';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { OdometerCounter } from '@/components/OdometerCounter';
 import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
@@ -47,6 +48,7 @@ export default function DisplayPage() {
   } | null>(null);
 
   const placeholderRef = useRef<HTMLDivElement>(null);
+  const displayRootRef = useRef<HTMLDivElement>(null);
   const darkPlaceholderRef = useRef<HTMLDivElement>(null);
   const queueRef = useRef<QueueItem[]>([]);
   const phaseRef = useRef<'idle' | 'celebrating' | 'gap'>('idle');
@@ -257,7 +259,8 @@ export default function DisplayPage() {
     : 'none';
 
   return (
-    <div className="display-root">
+    <div ref={displayRootRef} className="display-root">
+      <DisplayKioskPrompt containerRef={displayRootRef} />
       <LanguageSwitcher variant="display" />
 
       {/* ─── Dark screen layer ─── */}

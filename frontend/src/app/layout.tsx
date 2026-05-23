@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Google_Sans } from 'next/font/google';
 import { Providers } from '@/components/Providers';
 import './globals.css';
@@ -22,6 +22,21 @@ const googleSans = Google_Sans({
 export const metadata: Metadata = {
   title: 'Plug in to evolution',
   description: 'Plug in to evolution',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Plug in to evolution',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#ffa724',
 };
 
 export default function RootLayout({

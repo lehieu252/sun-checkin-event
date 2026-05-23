@@ -8,6 +8,10 @@ const vi = {
     galleryEmpty: 'Quét mã QR để check-in!',
     celebrationThanks: 'Cảm ơn {name} đã trở thành một phần của Mặt Trời',
     celebrationOrder: 'Bạn là tia sáng Mặt Trời thứ {count} được kích hoạt',
+    fullscreenPrompt: 'Nhấn để vào chế độ trình chiếu toàn màn hình',
+    fullscreenHint: 'Hoặc nhấn F11 trên bàn phím · Esc để thoát',
+    enterFullscreen: 'Toàn màn hình',
+    exitFullscreen: 'Thoát toàn màn hình',
   },
   checkin: {
     langTitle: 'Chọn ngôn ngữ',
@@ -38,6 +42,10 @@ const en = {
     galleryEmpty: 'Scan the QR code to check in!',
     celebrationThanks: 'Thank you {name} for becoming part of the Sun',
     celebrationOrder: 'You are the {count}th sun ray activated',
+    fullscreenPrompt: 'Tap to enter fullscreen display mode',
+    fullscreenHint: 'Or press F11 on keyboard · Esc to exit',
+    enterFullscreen: 'Fullscreen',
+    exitFullscreen: 'Exit fullscreen',
   },
   checkin: {
     langTitle: 'Choose language',
@@ -68,6 +76,10 @@ export type TranslationTree = {
     galleryEmpty: string;
     celebrationThanks: string;
     celebrationOrder: string;
+    fullscreenPrompt: string;
+    fullscreenHint: string;
+    enterFullscreen: string;
+    exitFullscreen: string;
   };
   checkin: {
     langTitle: string;
