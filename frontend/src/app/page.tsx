@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
+import { CheckinQrModal } from '@/components/CheckinQrModal';
 import { DarkScreen } from '@/components/DarkScreen';
 import { DisplayKioskPrompt } from '@/components/DisplayKioskPrompt';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
@@ -35,6 +36,7 @@ export default function DisplayPage() {
   const [highlightId, setHighlightId] = useState<number | null>(null);
   const [screenMode, setScreenMode] = useState<ScreenMode>('dark');
   const [rotationEnabled, setRotationEnabled] = useState(true);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
   const [darkSunPos, setDarkSunPos] = useState<{
     left: string;
     top: string;
@@ -144,7 +146,7 @@ export default function DisplayPage() {
   );
 
   useEffect(() => {
-    if (!rotationEnabled || celebration !== null) {
+    if (!rotationEnabled || celebration !== null || qrModalOpen) {
       clearRotateTimer();
       return;
     }
@@ -154,7 +156,7 @@ export default function DisplayPage() {
     }, ROTATE_MS);
 
     return () => clearRotateTimer();
-  }, [rotationEnabled, celebration, screenMode]);
+  }, [rotationEnabled, celebration, screenMode, qrModalOpen]);
 
   const fetchInitial = useCallback(async () => {
     try {
@@ -192,6 +194,7 @@ export default function DisplayPage() {
     setHighlightId(null);
     setScreenMode('dark');
     setRotationEnabled(true);
+    setQrModalOpen(false);
     lastCelebrationRef.current = null;
   }, []);
 
@@ -235,6 +238,7 @@ export default function DisplayPage() {
           count={count}
           brightness={darkBrightness}
           placeholderRef={darkPlaceholderRef}
+          onQrOpen={() => setQrModalOpen(true)}
         />
 
         {darkSunPos && showDarkLayer && (
@@ -271,9 +275,15 @@ export default function DisplayPage() {
             checkins={checkins}
             galleryEpoch={galleryEpoch}
             highlightId={highlightId}
+            onQrOpen={() => setQrModalOpen(true)}
           />
         )}
       </div>
+
+      <CheckinQrModal
+        open={qrModalOpen}
+        onClose={() => setQrModalOpen(false)}
+      />
     </div>
   );
 }

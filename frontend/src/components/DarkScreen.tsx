@@ -1,8 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { RefObject, useState } from 'react';
-import { CheckinQrModal } from '@/components/CheckinQrModal';
+import { RefObject } from 'react';
 import { DarkOdometerCounter } from '@/components/DarkOdometerCounter';
 import { SlideToCheckIn } from '@/components/SlideToCheckIn';
 import { useLanguage } from '@/lib/i18n/context';
@@ -11,11 +10,16 @@ interface DarkScreenProps {
   count: number;
   brightness: number;
   placeholderRef: RefObject<HTMLDivElement | null>;
+  onQrOpen: () => void;
 }
 
-export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProps) {
+export function DarkScreen({
+  count,
+  brightness,
+  placeholderRef,
+  onQrOpen,
+}: DarkScreenProps) {
   const { t } = useLanguage();
-  const [qrOpen, setQrOpen] = useState(false);
 
   return (
     <div className="dark-screen">
@@ -72,7 +76,7 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
           <p className="dark-slogan-text">{t('display.darkRightParagraph1')}</p>
           <p className="dark-slogan-text">{t('display.darkRightParagraph2')}</p>
         </div>
-        <SlideToCheckIn onComplete={() => setQrOpen(true)} />
+        <SlideToCheckIn onComplete={onQrOpen} />
       </div>
 
       <div className="dark-screen-footer">
@@ -81,8 +85,6 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
           {t('display.darkCounterLabel')}
         </div>
       </div>
-
-      <CheckinQrModal open={qrOpen} onClose={() => setQrOpen(false)} />
     </div>
   );
 }

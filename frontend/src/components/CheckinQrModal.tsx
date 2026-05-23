@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { CHECKIN_URL } from '@/lib/config';
 import { useLanguage } from '@/lib/i18n/context';
 
-const DISPLAY_SECONDS = 10;
+const DISPLAY_SECONDS = 15;
 const CLOSE_ANIM_MS = 450;
 
 interface CheckinQrModalProps {
