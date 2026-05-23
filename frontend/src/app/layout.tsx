@@ -19,8 +19,8 @@ const googleSans = Google_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Sun Check-in Event',
-  description: 'Event check-in display and registration',
+  title: 'Plug in to evolution',
+  description: 'Plug in to evolution',
 };
 
 export default function RootLayout({
