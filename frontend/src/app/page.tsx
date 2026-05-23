@@ -12,9 +12,9 @@ import { API_URL } from '@/lib/config';
 import { getDarkScreenBrightness } from '@/lib/darkBrightness';
 import type { NewCheckinPayload } from '@/lib/types';
 
-const DISPLAY_MS = 300000;
+const DISPLAY_MS = 10000;
 const GAP_MS = 3000;
-const ROTATE_MS = 300000;
+const ROTATE_MS = 15000;
 const SCREEN_LAYER_MS = 800;
 
 type ScreenMode = 'dark' | 'bright';
