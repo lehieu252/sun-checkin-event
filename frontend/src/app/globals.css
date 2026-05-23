@@ -1020,7 +1020,18 @@ body {
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
+.lang-switcher--display {
+  bottom: 48px;
+  right: 48px;
+  gap: 20px;
+}
+
 .lang-switcher--display .lang-switcher-btn {
+  min-width: 120px;
+  padding: 22px 44px;
+  border-width: 3px;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 40px;
   background: rgba(255, 255, 255, 0.92);
 }
 
@@ -1066,16 +1077,35 @@ body {
   line-height: 1;
 }
 
+.display-root .kiosk-prompt-icon {
+  font-size: 120px;
+}
+
 .kiosk-prompt-title {
   max-width: 420px;
   font-size: 1.5rem;
   font-weight: 700;
 }
 
+.display-root .kiosk-prompt {
+  gap: 32px;
+  padding: 48px;
+}
+
+.display-root .kiosk-prompt-title {
+  max-width: 1600px;
+  font-size: 64px;
+}
+
 .kiosk-prompt-hint {
   max-width: 420px;
   font-size: 0.95rem;
   opacity: 0.75;
+}
+
+.display-root .kiosk-prompt-hint {
+  max-width: 1600px;
+  font-size: 40px;
 }
 
 .kiosk-toggle-wrap {
@@ -1085,6 +1115,13 @@ body {
   z-index: 200;
   width: 28px;
   height: 28px;
+}
+
+.display-root .kiosk-toggle-wrap {
+  bottom: 48px;
+  left: 48px;
+  width: 80px;
+  height: 80px;
 }
 
 .kiosk-toggle {
@@ -1104,9 +1141,20 @@ body {
     border-color 0.2s ease;
 }
 
+.display-root .kiosk-toggle {
+  border-radius: 16px;
+  border-width: 2px;
+  opacity: 0.55;
+}
+
 .kiosk-toggle svg {
   width: 11px;
   height: 11px;
+}
+
+.display-root .kiosk-toggle svg {
+  width: 40px;
+  height: 40px;
 }
 
 .kiosk-toggle-wrap:hover .kiosk-toggle,
