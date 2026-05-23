@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { RefObject } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { OdometerCounter } from '@/components/OdometerCounter';
+import { SlideToCheckIn } from '@/components/SlideToCheckIn';
 import { CHECKIN_URL } from '@/lib/config';
 import { useLanguage } from '@/lib/i18n/context';
 
@@ -65,9 +66,12 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
         <div ref={placeholderRef} className="dark-sun-placeholder" />
       </div>
 
-      <div className="dark-screen-slogan dark-screen-slogan--right">
-        <p className="dark-slogan-text">{t('display.darkRightParagraph1')}</p>
-        <p className="dark-slogan-text">{t('display.darkRightParagraph2')}</p>
+      <div className="dark-screen-right-column">
+        <div className="dark-screen-slogan dark-screen-slogan--right">
+          <p className="dark-slogan-text">{t('display.darkRightParagraph1')}</p>
+          <p className="dark-slogan-text">{t('display.darkRightParagraph2')}</p>
+        </div>
+        <SlideToCheckIn />
       </div>
 
       <div className="dark-screen-footer">

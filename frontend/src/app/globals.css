@@ -911,17 +911,96 @@ body {
   transform: none;
 }
 
-.dark-screen-slogan--right {
+.dark-screen-right-column {
   position: absolute;
   top: 677px;
   right: 200px;
   z-index: 10;
   width: 745px;
+}
+
+.dark-screen-slogan--right {
+  position: static;
+  width: 100%;
   margin: 0;
   transform: none;
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
+}
+
+.dark-screen-right-column .slide-checkin {
+  margin-top: 68px;
+}
+
+/* ─── Slide to check-in ────────────────────── */
+
+.slide-checkin {
+  position: relative;
+  width: 745px;
+  height: 157px;
+  border-radius: 999px;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    #cb5140 47%,
+    #f4a64c 91%
+  );
+}
+
+.slide-checkin-arrow {
+  position: absolute;
+  top: 50%;
+  right: 48px;
+  left: auto;
+  z-index: 1;
+  transform: translateY(-50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    left 0.35s ease,
+    right 0.35s ease,
+    transform 0.35s ease;
+}
+
+.slide-checkin--completed .slide-checkin-arrow {
+  right: auto;
+  left: 48px;
+}
+
+.slide-checkin-handle {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 600px;
+  height: 141px;
+  border-radius: 999px;
+  background: #fbf7f0;
+  color: #dc4d10;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: grab;
+  transition: transform 0.28s cubic-bezier(0.34, 1.1, 0.64, 1);
+  will-change: transform;
+}
+
+.slide-checkin--dragging .slide-checkin-handle {
+  cursor: grabbing;
+  transition: none;
+}
+
+.slide-checkin--completed .slide-checkin-handle {
+  cursor: default;
 }
 
 .dark-slogan-text {

@@ -16,6 +16,7 @@ const vi = {
       'Mặt Trời là nơi sự sống bắt đầu - nguồn năng lượng tạo nên thế giới hữu hình và nuôi dưỡng mọi chuyển động của tương lai.',
     darkRightParagraph2:
       'Sự hiện diện của bạn tại đây là một đơn vị ánh sáng được thêm vào hành trình ấy, để những kết nối nhỏ cùng tạo nên thay đổi bền vững.',
+    slideCheckIn: 'Check in ngay',
   },
   checkin: {
     langTitle: 'Chọn ngôn ngữ',
@@ -54,6 +55,7 @@ const en = {
       'The Sun is where life begins a source of energy that shapes the visible world and powers the future.',
     darkRightParagraph2:
       'Your presence here becomes a unit of light added to that journey, where small connections come together to create sustainable change.',
+    slideCheckIn: 'Check in now',
   },
   checkin: {
     langTitle: 'Choose language',
@@ -90,6 +92,7 @@ export type TranslationTree = {
     exitFullscreen: string;
     darkRightParagraph1: string;
     darkRightParagraph2: string;
+    slideCheckIn: string;
   };
   checkin: {
     langTitle: string;
