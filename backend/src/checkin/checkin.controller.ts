@@ -78,4 +78,15 @@ export class CheckinController {
     const count = await this.checkinService.getCount();
     return { count };
   }
+
+  @Get()
+  async findAll() {
+    const checkins = await this.checkinService.findAll();
+    return checkins.map((c) => ({
+      id: c.id,
+      name: c.name,
+      message: c.message,
+      photoUrl: `/uploads/${c.photoPath}`,
+    }));
+  }
 }

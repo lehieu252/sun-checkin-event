@@ -1,40 +1,51 @@
 'use client';
 
+import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { QRCodeSVG } from 'qrcode.react';
 import { OdometerCounter } from '@/components/OdometerCounter';
-import { PhotoGallery } from '@/components/PhotoGallery';
+import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
 import { API_URL, CHECKIN_URL } from '@/lib/config';
 import type { NewCheckinPayload } from '@/lib/types';
 
-const RAYS = Array.from({ length: 8 }, (_, i) => i);
-const DISPLAY_MS = 12000;
-const FADE_MS = 1400;
+const DISPLAY_MS = 10000;
+const GAP_MS = 3000;
+
+interface QueueItem {
+  person: NewCheckinPayload;
+  count: number;
+}
 
 interface Celebration {
   person: NewCheckinPayload;
   count: number;
-  fadingOut: boolean;
 }
 
 export default function DisplayPage() {
   const [count, setCount] = useState(0);
   const [checkins, setCheckins] = useState<NewCheckinPayload[]>([]);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
-  const [sunPos, setSunPos] = useState<{ left: string; top: string } | null>(null);
+  const [sunPos, setSunPos] = useState<{ left: string; top: string } | null>(
+    null,
+  );
 
   const placeholderRef = useRef<HTMLDivElement>(null);
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const queueRef = useRef<QueueItem[]>([]);
+  const phaseRef = useRef<'idle' | 'celebrating' | 'gap'>('idle');
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countRef = useRef(0);
 
-  // Calculate sun's natural (left-panel) position from the placeholder element
+  // Sun resting position from placeholder in left panel
   useEffect(() => {
     const el = placeholderRef.current;
     if (!el) return;
     const update = () => {
       const r = el.getBoundingClientRect();
-      setSunPos({ left: `${r.left + r.width / 2}px`, top: `${r.top + r.height / 2}px` });
+      setSunPos({
+        left: `${r.left + r.width / 2}px`,
+        top: `${r.top + r.height / 2}px`,
+      });
     };
     update();
     const ro = new ResizeObserver(update);
@@ -42,20 +53,67 @@ export default function DisplayPage() {
     return () => ro.disconnect();
   }, []);
 
-  const fetchCount = useCallback(async () => {
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const processQueueRef = useRef<(() => void) | null>(null);
+
+  const processQueue = useCallback(() => {
+    if (phaseRef.current !== 'idle' || queueRef.current.length === 0) return;
+
+    const next = queueRef.current.shift()!;
+    phaseRef.current = 'celebrating';
+    setCelebration({ person: next.person, count: next.count });
+
+    clearTimer();
+    timerRef.current = setTimeout(() => {
+      setCelebration(null);
+      phaseRef.current = 'gap';
+
+      timerRef.current = setTimeout(() => {
+        phaseRef.current = 'idle';
+        processQueueRef.current?.();
+      }, GAP_MS);
+    }, DISPLAY_MS);
+  }, []);
+
+  useEffect(() => {
+    processQueueRef.current = processQueue;
+  }, [processQueue]);
+
+  const enqueueCelebration = useCallback(
+    (item: QueueItem) => {
+      queueRef.current.push(item);
+      processQueue();
+    },
+    [processQueue],
+  );
+
+  const fetchInitial = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/checkins/count`);
-      const data = await res.json();
-      countRef.current = data.count ?? 0;
+      const [countRes, listRes] = await Promise.all([
+        fetch(`${API_URL}/checkins/count`),
+        fetch(`${API_URL}/checkins`),
+      ]);
+      const countData = await countRes.json();
+      const listData = await listRes.json();
+      countRef.current = countData.count ?? 0;
       setCount(countRef.current);
+      if (Array.isArray(listData)) {
+        setCheckins(listData);
+      }
     } catch {
       // silently ignore
     }
   }, []);
 
   useEffect(() => {
-    fetchCount();
-  }, [fetchCount]);
+    fetchInitial();
+  }, [fetchInitial]);
 
   useEffect(() => {
     const socket = io(API_URL, { transports: ['websocket', 'polling'] });
@@ -65,122 +123,133 @@ export default function DisplayPage() {
       const c = countRef.current;
       setCount(c);
       setCheckins((prev) => [payload, ...prev]);
-
-      // Cancel any in-progress celebration
-      timersRef.current.forEach(clearTimeout);
-
-      setCelebration({ person: payload, count: c, fadingOut: false });
-
-      const t1 = setTimeout(() => {
-        setCelebration((prev) => (prev ? { ...prev, fadingOut: true } : null));
-      }, DISPLAY_MS - FADE_MS);
-
-      const t2 = setTimeout(() => {
-        setCelebration(null);
-      }, DISPLAY_MS);
-
-      timersRef.current = [t1, t2];
+      enqueueCelebration({ person: payload, count: c });
     });
 
     return () => {
       socket.disconnect();
-      timersRef.current.forEach(clearTimeout);
+      clearTimer();
     };
-  }, []);
+  }, [enqueueCelebration]);
 
-  const celebrating = celebration !== null && !celebration.fadingOut;
-  const fadingOut = celebration !== null && celebration.fadingOut;
+  const celebrating = celebration !== null;
 
-  // Sun position: moves to center when celebrating, returns to placeholder otherwise
   const sunLeft = celebrating ? '50vw' : (sunPos?.left ?? '-999px');
-  const sunTop = celebrating ? '40vh' : (sunPos?.top ?? '-999px');
+  const sunTop = celebrating ? '42vh' : (sunPos?.top ?? '-999px');
+  const sunScale = celebrating ? 2 : 1;
   const sunTransition = sunPos
-    ? 'left 1.3s cubic-bezier(0.34,1.1,0.64,1), top 1.3s ease-in-out'
+    ? 'left 1.4s cubic-bezier(0.34,1.1,0.64,1), top 1.4s ease-in-out, transform 1.4s cubic-bezier(0.34,1.1,0.64,1)'
     : 'none';
 
   return (
     <main className="display-main">
-      {/* ─── Left panel ─────────────────────────────── */}
-      <div className="display-left">
-        {/* Invisible placeholder — reserves the exact space the fixed sun occupies */}
-        <div ref={placeholderRef} className="sun-placeholder" />
+      {/* Top gradient — mirror of bottom, at header */}
+      <div className="display-top-gradient" aria-hidden="true" />
 
-        <p className="cta-label">CALL TO ACTION</p>
+      {/* Header logos */}
+      <div className="display-header">
+        <Image
+          src="/global_gateway.svg"
+          alt="Global Gateway"
+          width={220}
+          height={48}
+          className="display-logo display-logo--left"
+          priority
+        />
+        <Image
+          src="/euro_union.svg"
+          alt="European Union"
+          width={150}
+          height={96}
+          className="display-logo display-logo--right"
+          priority
+        />
+      </div>
 
-        <div className="cta-qr-box">
-          <QRCodeSVG
-            value={CHECKIN_URL}
-            size={130}
-            level="H"
-            includeMargin={false}
-            fgColor="#633236"
+      {/* Idle layout — hidden during celebration */}
+      <div
+        className={`display-idle${celebrating ? ' display-idle--hidden' : ''}`}
+      >
+        {/* Left panel */}
+        <div className="display-left">
+          <div ref={placeholderRef} className="sun-placeholder" />
+
+          <Image
+            src="/plug_in_evolution.svg"
+            alt="Plug in to evolution"
+            width={480}
+            height={56}
+            className="plug-in-logo"
+            priority
           />
-          <p className="cta-qr-hint">Quét mã để check-in</p>
-        </div>
 
-        <OdometerCounter count={count} digits={6} label="Lượt check-in thành công" />
-      </div>
-
-      {/* ─── Right panel — photo gallery ─────────────── */}
-      <div className="display-right">
-        {checkins.length > 0 ? (
-          <PhotoGallery checkins={checkins} />
-        ) : (
-          <div className="gallery-empty">
-            <p>Quét mã QR bên trái để check-in!</p>
-          </div>
-        )}
-      </div>
-
-      {/* ─── Fixed sun — transitions from left panel to screen center ── */}
-      {sunPos && (
-        <div
-          className={`sun-fixed${celebrating ? ' sun-fixed--celebrating' : ''}`}
-          style={{ left: sunLeft, top: sunTop, transition: sunTransition }}
-        >
-          <div className="sun-inner">
-            <div className="sun-wrapper">
-              <div className="sun-rays-ring sun-rays-ring--spinning">
-                {RAYS.map((i) => (
-                  <div
-                    key={i}
-                    className="sun-ray"
-                    style={{ '--ray-i': i } as React.CSSProperties}
-                  />
-                ))}
-              </div>
-              <div className="sun-body">
-                <div className="sun-eyes">
-                  <div className="sun-eye" />
-                  <div className="sun-eye" />
-                </div>
-              </div>
+          <OdometerCounter
+            count={count}
+            digits={4}
+            label=""
+          />
+          <div className="odometer-label">Tia sáng Mặt Trời đã được kích hoạt</div>
+          <div className="cta-qr-row">
+            <div className="cta-qr-box">
+              <QRCodeSVG
+                value={CHECKIN_URL}
+                size={112}
+                level="H"
+                includeMargin={false}
+                fgColor="#3F1700"
+              />
+            </div>
+            <div className="cta-qr-text">
+              <p className="cta-qr-title">Quét mã ngay</p>
+              <p className="cta-qr-sub">
+                Để check-in và trở thành một phần của Mặt Trời
+              </p>
             </div>
           </div>
         </div>
-      )}
 
-      {/* ─── Backdrop (dims background during celebration) ─── */}
-      {celebration && (
-        <div
-          className={`celebration-backdrop${fadingOut ? ' celebration-backdrop--out' : ''}`}
-        />
-      )}
+        {/* Right panel — 3-column gallery */}
+        <div className="display-right">
+          {checkins.length > 0 ? (
+            <ThreeColumnGallery checkins={checkins} />
+          ) : (
+            <div className="gallery-empty">
+              <p>Quét mã QR để check-in!</p>
+            </div>
+          )}
+        </div>
 
-      {/* ─── Celebration message ─────────────────────── */}
-      {celebration && (
+        {/* Bottom gradient — CSS linear gradient per design spec */}
+        <div className="display-bottom-gradient" aria-hidden="true" />
+      </div>
+
+      {/* Fixed sun — SVG with bob animation */}
+      {sunPos && (
         <div
-          className={`celebration-msg${fadingOut ? ' celebration-msg--out' : ''}`}
+          className="sun-fixed"
+          style={{
+            left: sunLeft,
+            top: sunTop,
+            transition: sunTransition,
+            transform: `translate(-50%, -50%) scale(${sunScale})`,
+          }}
         >
+          <div className="sun-inner sun-inner--bobbing">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/sun.svg" alt="Sun" className="sun-svg" />
+          </div>
+        </div>
+      )}
+
+      {/* Celebration message */}
+      {celebration && (
+        <div className="celebration-msg">
           <p className="celebration-thanks">
-            Cảm ơn <strong>{celebration.person.name}</strong> đã tham gia sự kiện! 🎉
+            Cảm ơn {celebration.person.name}
           </p>
           <p className="celebration-order">
-            Bạn là người thứ <strong>{celebration.count}</strong> check-in hôm nay
+            Bạn là người check in thứ {celebration.count}
           </p>
-          {celebration.person.message && (
-            <p className="celebration-wish">&ldquo;{celebration.person.message}&rdquo;</p>
-          )}
         </div>
       )}
     </main>

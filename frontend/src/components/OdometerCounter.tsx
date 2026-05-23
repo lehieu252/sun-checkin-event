@@ -17,13 +17,12 @@ export function OdometerCounter({
   const digitArray = padded.split('');
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="flex gap-2">
+    <div className="flex flex-col items-center gap-5">
+      <div className="flex gap-3">
         {digitArray.map((digit, index) => (
           <OdometerDigit key={`${index}-${digit}`} digit={digit} />
         ))}
       </div>
-      <p className="text-xs font-medium text-[#92400e] md:text-sm">{label}</p>
     </div>
   );
 }

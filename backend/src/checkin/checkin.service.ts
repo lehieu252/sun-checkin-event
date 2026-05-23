@@ -37,4 +37,10 @@ export class CheckinService {
   async getCount(): Promise<number> {
     return this.checkinRepository.count();
   }
+
+  async findAll(): Promise<Checkin[]> {
+    return this.checkinRepository.find({
+      order: { createdAt: 'DESC' },
+    });
+  }
 }
