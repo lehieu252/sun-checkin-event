@@ -1,10 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { QRCodeSVG } from 'qrcode.react';
-import { OdometerCounter } from '@/components/OdometerCounter';
-import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
-import { CHECKIN_URL } from '@/lib/config';
+import { DarkOdometerCounter } from '@/components/DarkOdometerCounter';
+import { SlideToCheckIn } from '@/components/SlideToCheckIn';
 import { useLanguage } from '@/lib/i18n/context';
 import type { NewCheckinPayload } from '@/lib/types';
 
@@ -17,9 +15,9 @@ interface LightScreenProps {
 
 export function LightScreen({
   count,
-  checkins,
-  galleryEpoch,
-  highlightId,
+  checkins: _checkins,
+  galleryEpoch: _galleryEpoch,
+  highlightId: _highlightId,
 }: LightScreenProps) {
   const { t } = useLanguage();
 
@@ -64,36 +62,19 @@ export function LightScreen({
         </div>
       </div>
 
-      <div className="display-idle">
-        <div className="display-left">
-          <Image
-            src="/plug_in_evolution.svg"
-            alt="Plug in to evolution"
-            width={480}
-            height={56}
-            className="plug-in-logo"
-            priority
-          />
-
-          <OdometerCounter count={count} digits={4} label="" />
-          <div className="odometer-label">{t('display.odometerLabel')}</div>
-          <div className="cta-qr-row">
-            <div className="cta-qr-box">
-              <QRCodeSVG
-                value={CHECKIN_URL}
-                size={112}
-                level="H"
-                includeMargin={false}
-                fgColor="#3F1700"
-              />
-            </div>
-            <div className="cta-qr-text">
-              <p className="cta-qr-title">{t('display.qrTitle')}</p>
-              <p className="cta-qr-sub">{t('display.qrSub')}</p>
-            </div>
-          </div>
+      <div className="light-screen-footer">
+        <DarkOdometerCounter count={count} digits={4} />
+        <div className="light-odometer-label">
+          {t('display.darkCounterLabel')}
         </div>
+        <div className="light-screen-copy">
+          <p>{t('display.darkRightParagraph1')}</p>
+          <p>{t('display.darkRightParagraph2')}</p>
+        </div>
+        <SlideToCheckIn variant="wide" />
+      </div>
 
+      {/* <div className="display-idle">
         <div className="display-right">
           {checkins.length > 0 ? (
             <ThreeColumnGallery
@@ -109,7 +90,7 @@ export function LightScreen({
         </div>
 
         <div className="display-bottom-gradient" aria-hidden="true" />
-      </div>
+      </div> */}
     </main>
   );
 }

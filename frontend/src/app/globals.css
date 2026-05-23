@@ -306,7 +306,7 @@ body {
 
 .light-sun-area {
   position: absolute;
-  top: 280px;
+  top: 240px;
   left: 379px;
   z-index: 1;
   width: 860px;
@@ -354,6 +354,61 @@ body {
   line-height: 1.2;
   color: #3f1700;
   text-align: center;
+}
+
+.light-screen-footer {
+  position: absolute;
+  top: 1050px;
+  left: calc(379px + 860px / 2);
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+}
+
+.light-odometer-label {
+  margin-top: 42px;
+  font-family: var(--font-gilroy), sans-serif;
+  font-size: 56px;
+  font-weight: 600;
+  color: #393939;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.light-screen-footer .dark-odometer-digit-box {
+  width: 180px;
+  height: 192px;
+}
+
+.light-screen-footer .dark-odometer-digit-text {
+  font-size: 92px;
+}
+
+.light-screen-copy {
+  width: 1136px;
+  margin-top: 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.light-screen-copy p {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #393939;
+}
+
+.light-screen-footer .slide-checkin {
+  margin-top: 68px;
 }
 
 .sun-inner--light.sun-inner--bobbing {
@@ -1104,6 +1159,19 @@ body {
   cursor: default;
 }
 
+.slide-checkin.slide-checkin--wide {
+  width: 1136px;
+  height: 157px;
+}
+
+.slide-checkin.slide-checkin--wide .slide-checkin-handle {
+  width: 915px;
+}
+
+.slide-checkin.slide-checkin--wide .slide-checkin-arrow {
+  right: 73px;
+}
+
 .dark-slogan-text {
   margin: 0;
   font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
@@ -1180,7 +1248,7 @@ body {
 
 .dark-odometer-digit-text {
   font-family: var(--font-gilroy), sans-serif;
-  font-size: 140px;
+  font-size: 100px;
   font-weight: 600;
   line-height: 1;
 }

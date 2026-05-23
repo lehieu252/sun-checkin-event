@@ -4,18 +4,33 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '@/lib/i18n/context';
 
-const TRACK_WIDTH = 745;
-const TRACK_PADDING = 8;
-const HANDLE_WIDTH = 600;
-const MAX_OFFSET = TRACK_WIDTH - HANDLE_WIDTH - TRACK_PADDING * 2;
-const COMPLETE_THRESHOLD = MAX_OFFSET * 0.85;
+const SIZES = {
+  default: {
+    trackWidth: 745,
+    handleWidth: 600,
+    trackPadding: 8,
+  },
+  wide: {
+    trackWidth: 1136,
+    handleWidth: 915,
+    trackPadding: 8,
+  },
+} as const;
+
 const RESET_DELAY_MS = 450;
 
 interface SlideToCheckInProps {
   onComplete?: () => void;
+  variant?: keyof typeof SIZES;
 }
 
-export function SlideToCheckIn({ onComplete }: SlideToCheckInProps) {
+export function SlideToCheckIn({
+  onComplete,
+  variant = 'default',
+}: SlideToCheckInProps) {
+  const { trackWidth, handleWidth, trackPadding } = SIZES[variant];
+  const maxOffset = trackWidth - handleWidth - trackPadding * 2;
+  const completeThreshold = maxOffset * 0.85;
   const { t } = useLanguage();
   const [offset, setOffset] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -49,9 +64,9 @@ export function SlideToCheckIn({ onComplete }: SlideToCheckInProps) {
     draggingRef.current = false;
     setDragging(false);
 
-    if (offsetRef.current >= COMPLETE_THRESHOLD) {
+    if (offsetRef.current >= completeThreshold) {
       resettingRef.current = true;
-      setDragOffset(MAX_OFFSET);
+      setDragOffset(maxOffset);
       setCompleted(true);
       onComplete?.();
 
@@ -64,7 +79,9 @@ export function SlideToCheckIn({ onComplete }: SlideToCheckInProps) {
 
   return (
     <div
-      className={`slide-checkin${completed ? ' slide-checkin--completed' : ''}${
+      className={`slide-checkin${
+        variant === 'wide' ? ' slide-checkin--wide' : ''
+      }${completed ? ' slide-checkin--completed' : ''}${
         dragging ? ' slide-checkin--dragging' : ''
       }`}
     >
@@ -74,7 +91,7 @@ export function SlideToCheckIn({ onComplete }: SlideToCheckInProps) {
 
       <div
         className="slide-checkin-handle"
-        style={{ transform: `translateX(${TRACK_PADDING + offset}px)` }}
+        style={{ transform: `translateX(${trackPadding + offset}px)` }}
         onPointerDown={(e) => {
           if (resettingRef.current) return;
           e.preventDefault();
@@ -88,7 +105,7 @@ export function SlideToCheckIn({ onComplete }: SlideToCheckInProps) {
           if (!draggingRef.current || resettingRef.current) return;
           const delta = e.clientX - dragStartX.current;
           const next = Math.min(
-            MAX_OFFSET,
+            maxOffset,
             Math.max(0, dragStartOffset.current + delta),
           );
           setDragOffset(next);
