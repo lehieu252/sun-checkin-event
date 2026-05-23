@@ -23,7 +23,8 @@ export function LightScreen({
 
   return (
     <main className="display-main">
-      <div className="display-top-gradient" aria-hidden="true" />
+      <div className="light-top-gradient" aria-hidden="true" />
+      <div className="light-bottom-gradient" aria-hidden="true" />
 
       <div className="display-header">
         <Image
