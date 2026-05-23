@@ -1,6 +1,8 @@
 'use client';
 
 import Image from 'next/image';
+import { useState } from 'react';
+import { CheckinQrModal } from '@/components/CheckinQrModal';
 import { DarkOdometerCounter } from '@/components/DarkOdometerCounter';
 import { SlideToCheckIn } from '@/components/SlideToCheckIn';
 import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
@@ -21,6 +23,7 @@ export function LightScreen({
   highlightId,
 }: LightScreenProps) {
   const { t } = useLanguage();
+  const [qrOpen, setQrOpen] = useState(false);
 
   return (
     <main className="display-main">
@@ -88,8 +91,10 @@ export function LightScreen({
           <p>{t('display.darkRightParagraph1')}</p>
           <p>{t('display.darkRightParagraph2')}</p>
         </div>
-        <SlideToCheckIn variant="wide" />
+        <SlideToCheckIn variant="wide" onComplete={() => setQrOpen(true)} />
       </div>
+
+      <CheckinQrModal open={qrOpen} onClose={() => setQrOpen(false)} />
     </main>
   );
 }

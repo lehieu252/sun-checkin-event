@@ -5,6 +5,12 @@ const vi = {
     odometerLabel: 'Tia sáng Mặt Trời đã được kích hoạt',
     qrTitle: 'Quét mã ngay',
     qrSub: 'Để check-in và trở thành một phần của Mặt Trời',
+    qrCountdown: 'Tự động đóng sau {seconds}s',
+    qrModalClose: 'Đóng mã QR',
+    qrModalHeadline:
+      'Quét mã để check-in và tiếp tục hành trình của ánh sáng',
+    qrModalBody:
+      'Mỗi lượt check-in được ghi nhận sẽ trở thành một đơn vị ánh sáng cho hành trình của Mặt Trời.',
     galleryEmpty: 'Quét mã QR để check-in!',
     celebrationThanks: 'Cảm ơn {name} đã trở thành một phần của Mặt Trời',
     celebrationOrder: 'Bạn là tia sáng Mặt Trời thứ {count} được kích hoạt',
@@ -46,6 +52,12 @@ const en = {
     odometerLabel: 'Sun rays have been activated',
     qrTitle: 'Scan now',
     qrSub: 'Check in and become part of the Sun',
+    qrCountdown: 'Closing in {seconds}s',
+    qrModalClose: 'Close QR code',
+    qrModalHeadline:
+      'Scan the code to upload your check-in photo and move the light forward',
+    qrModalBody:
+      'Each connection becomes a unit of light powering the Sun forward.',
     galleryEmpty: 'Scan the QR code to check in!',
     celebrationThanks: 'Thank you {name} for becoming part of the Sun',
     celebrationOrder: 'You are the {count}th sun ray activated',
@@ -87,6 +99,10 @@ export type TranslationTree = {
     odometerLabel: string;
     qrTitle: string;
     qrSub: string;
+    qrCountdown: string;
+    qrModalClose: string;
+    qrModalHeadline: string;
+    qrModalBody: string;
     galleryEmpty: string;
     celebrationThanks: string;
     celebrationOrder: string;

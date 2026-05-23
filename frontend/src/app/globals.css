@@ -515,6 +515,115 @@ body {
   }
 }
 
+/* ─── Check-in QR modal ────────────────────── */
+
+.checkin-qr-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  pointer-events: auto;
+}
+
+.checkin-qr-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: rgba(36, 38, 29, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.checkin-qr-modal--active .checkin-qr-modal__backdrop,
+.checkin-qr-modal--closing .checkin-qr-modal__backdrop {
+  opacity: 1;
+}
+
+.checkin-qr-modal--closing .checkin-qr-modal__backdrop {
+  opacity: 0;
+}
+
+.checkin-qr-modal__panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 750px;
+  max-width: calc(100vw - 48px);
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: translateY(64px);
+  opacity: 0;
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.1, 0.64, 1),
+    opacity 0.35s ease;
+}
+
+.checkin-qr-modal--active .checkin-qr-modal__panel {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.checkin-qr-modal--closing .checkin-qr-modal__panel {
+  transform: translateY(64px);
+  opacity: 0;
+}
+
+.checkin-qr-modal__qr-box {
+  width: 750px;
+  height: 750px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(63, 23, 0, 0.18);
+  overflow: hidden;
+}
+
+.checkin-qr-modal__qr-box svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.checkin-qr-modal__copy {
+  width: 100%;
+  min-width: 2068px;
+  margin-top: 150px;
+  text-align: center;
+}
+
+.checkin-qr-modal__headline {
+  margin: 0 auto;
+  max-width: 1746px;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 100px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #df9433;
+  text-align: center;
+}
+
+.checkin-qr-modal__body {
+  margin: 32px 0 0;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 66px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #ffffff;
+  text-align: center;
+}
+
 /* ─── Three-column gallery ─────────────────── */
 
 .gallery-three-col {
