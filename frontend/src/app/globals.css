@@ -590,8 +590,19 @@ body {
   color: #fff;
 }
 
+.dark-screen-bg-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: filter 0.8s ease;
+}
+
 .dark-screen-bg {
   z-index: 0;
+}
+
+.dark-sun-brightness {
+  transition: filter 0.8s ease;
 }
 
 .dark-screen-header {

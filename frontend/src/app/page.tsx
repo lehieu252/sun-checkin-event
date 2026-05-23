@@ -8,6 +8,7 @@ import { DarkScreen } from '@/components/DarkScreen';
 import { OdometerCounter } from '@/components/OdometerCounter';
 import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
 import { API_URL, CHECKIN_URL } from '@/lib/config';
+import { getDarkScreenBrightness } from '@/lib/darkBrightness';
 import type { NewCheckinPayload } from '@/lib/types';
 
 const DISPLAY_MS = 10000;
@@ -243,6 +244,7 @@ export default function DisplayPage() {
   const celebrating = celebration !== null;
   const showDarkLayer = !celebrating && screenMode === 'dark';
   const showBrightLayer = celebrating || screenMode === 'bright';
+  const darkBrightness = getDarkScreenBrightness(count);
 
   const sunLeft = celebrating ? '50vw' : (sunPos?.left ?? '-999px');
   const sunTop = celebrating ? '42vh' : (sunPos?.top ?? '-999px');
@@ -257,7 +259,11 @@ export default function DisplayPage() {
       <div
         className={`screen-layer screen-layer--dark${showDarkLayer ? ' screen-layer--active' : ''}`}
       >
-        <DarkScreen count={count} placeholderRef={darkPlaceholderRef} />
+        <DarkScreen
+          count={count}
+          brightness={darkBrightness}
+          placeholderRef={darkPlaceholderRef}
+        />
 
         {darkSunPos && showDarkLayer && (
           <div
@@ -268,7 +274,10 @@ export default function DisplayPage() {
               transform: 'translate(-50%, -50%) scale(1)',
             }}
           >
-            <div className="sun-inner sun-inner--bobbing">
+            <div
+              className="sun-inner sun-inner--bobbing dark-sun-brightness"
+              style={{ filter: `brightness(${darkBrightness})` }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/sun_dark.svg" alt="Sun" className="dark-sun-svg" />
             </div>

@@ -8,19 +8,25 @@ import { CHECKIN_URL } from '@/lib/config';
 
 interface DarkScreenProps {
   count: number;
+  brightness: number;
   placeholderRef: RefObject<HTMLDivElement | null>;
 }
 
-export function DarkScreen({ count, placeholderRef }: DarkScreenProps) {
+export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProps) {
   return (
     <div className="dark-screen">
-      <Image
-        src="/background_dark.png"
-        alt=""
-        fill
-        className="dark-screen-bg object-cover"
-        priority
-      />
+      <div
+        className="dark-screen-bg-wrap"
+        style={{ filter: `brightness(${brightness})` }}
+      >
+        <Image
+          src="/background_dark.png"
+          alt=""
+          fill
+          className="dark-screen-bg object-cover"
+          priority
+        />
+      </div>
 
       <div className="dark-screen-header">
         <Image
