@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { OdometerCounter } from '@/components/OdometerCounter';
 import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
@@ -23,26 +22,6 @@ export function LightScreen({
   highlightId,
 }: LightScreenProps) {
   const { t } = useLanguage();
-  const placeholderRef = useRef<HTMLDivElement>(null);
-  const [sunPos, setSunPos] = useState<{ left: string; top: string } | null>(
-    null,
-  );
-
-  useEffect(() => {
-    const el = placeholderRef.current;
-    if (!el) return;
-    const update = () => {
-      const r = el.getBoundingClientRect();
-      setSunPos({
-        left: `${r.left + r.width / 2}px`,
-        top: `${r.top + r.height / 2}px`,
-      });
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(document.documentElement);
-    return () => ro.disconnect();
-  }, []);
 
   return (
     <main className="display-main">
@@ -67,10 +46,26 @@ export function LightScreen({
         />
       </div>
 
+      <div className="light-sun-area">
+        <div className="sun-inner sun-inner--bobbing sun-inner--light">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/sun_dark.svg" alt="" className="light-sun-svg" />
+          <div className="light-sun-overlay">
+            <Image
+              src="/we_are_made_of_sun.svg"
+              alt="We are made of sun"
+              width={298}
+              height={264}
+              className="light-sun-slogan-img"
+              priority
+            />
+            <p className="light-plug-in-slogan">{t('display.darkPlugInSlogan')}</p>
+          </div>
+        </div>
+      </div>
+
       <div className="display-idle">
         <div className="display-left">
-          <div ref={placeholderRef} className="sun-placeholder" />
-
           <Image
             src="/plug_in_evolution.svg"
             alt="Plug in to evolution"
@@ -115,22 +110,6 @@ export function LightScreen({
 
         <div className="display-bottom-gradient" aria-hidden="true" />
       </div>
-
-      {sunPos && (
-        <div
-          className="sun-fixed"
-          style={{
-            left: sunPos.left,
-            top: sunPos.top,
-            transform: 'translate(-50%, -50%) scale(0.75)',
-          }}
-        >
-          <div className="sun-inner sun-inner--bobbing">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/sun_dark.svg" alt="Sun" className="sun-svg" />
-          </div>
-        </div>
-      )}
     </main>
   );
 }

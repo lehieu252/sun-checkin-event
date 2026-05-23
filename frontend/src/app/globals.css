@@ -304,6 +304,72 @@ body {
   background: transparent;
 }
 
+.light-sun-area {
+  position: absolute;
+  top: 280px;
+  left: 379px;
+  z-index: 1;
+  width: 860px;
+  height: 850px;
+  pointer-events: none;
+}
+
+.sun-inner--light {
+  position: relative;
+  width: 860px;
+  height: 850px;
+}
+
+.light-sun-svg {
+  display: block;
+  width: 860px;
+  height: 850px;
+  object-fit: contain;
+  background: transparent;
+  opacity: 0.7;
+}
+
+.light-sun-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+}
+
+.light-sun-slogan-img {
+  width: 298px;
+  height: 264px;
+  object-fit: contain;
+}
+
+.light-plug-in-slogan {
+  margin: 12px 0 0;
+  padding: 0;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #3f1700;
+  text-align: center;
+}
+
+.sun-inner--light.sun-inner--bobbing {
+  animation: lightSunBob 4s ease-in-out infinite;
+}
+
+@keyframes lightSunBob {
+  0%,
+  100% {
+    transform: translateY(12px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
 /* ─── Celebration message (Image 2) ────────── */
 
 .celebration-msg {
