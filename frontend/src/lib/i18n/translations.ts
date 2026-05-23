@@ -12,8 +12,10 @@ const vi = {
     qrModalBody:
       'Mỗi lượt check-in được ghi nhận sẽ trở thành một đơn vị ánh sáng cho hành trình của Mặt Trời.',
     galleryEmpty: 'Quét mã QR để check-in!',
-    celebrationThanks: 'Cảm ơn {name} đã trở thành một phần của Mặt Trời',
-    celebrationOrder: 'Bạn là tia sáng Mặt Trời thứ {count} được kích hoạt',
+    thankYouHeadline: 'Một kết nối mới vừa được thắp lên tại',
+    thankYouSunQuote: '"We are made of SUN"!',
+    thankYouBody:
+      'Cảm ơn {name} đã đóng góp một đơn vị ánh sáng để cùng chúng tôi nuôi dưỡng hành trình của tri thức, năng lượng và tương lai bền vững. ☀️',
     fullscreenPrompt: 'Nhấn để vào chế độ trình chiếu toàn màn hình',
     fullscreenHint: 'Hoặc nhấn F11 trên bàn phím · Esc để thoát',
     enterFullscreen: 'Toàn màn hình',
@@ -59,8 +61,10 @@ const en = {
     qrModalBody:
       'Each connection becomes a unit of light powering the Sun forward.',
     galleryEmpty: 'Scan the QR code to check in!',
-    celebrationThanks: 'Thank you {name} for becoming part of the Sun',
-    celebrationOrder: 'You are the {count}th sun ray activated',
+    thankYouHeadline: 'A new connection has just been sparked at',
+    thankYouSunQuote: '"We are made of SUN"!',
+    thankYouBody:
+      'Thank you, {name}, for adding a unit of light to our journey that nurtures knowledge, energy, and a more sustainable future ☀️',
     fullscreenPrompt: 'Tap to enter fullscreen display mode',
     fullscreenHint: 'Or press F11 on keyboard · Esc to exit',
     enterFullscreen: 'Fullscreen',
@@ -104,8 +108,9 @@ export type TranslationTree = {
     qrModalHeadline: string;
     qrModalBody: string;
     galleryEmpty: string;
-    celebrationThanks: string;
-    celebrationOrder: string;
+    thankYouHeadline: string;
+    thankYouSunQuote: string;
+    thankYouBody: string;
     fullscreenPrompt: string;
     fullscreenHint: string;
     enterFullscreen: string;

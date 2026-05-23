@@ -454,65 +454,106 @@ body {
   }
 }
 
-/* ─── Celebration message (Image 2) ────────── */
+/* ─── Thank you screen ─────────────────────── */
 
-.celebration-msg {
-  position: fixed;
-  left: 50%;
-  top: 82vh;
-  transform: translateX(-50%);
-  z-index: 60;
-  text-align: center;
-  animation: msgIn 0.8s ease forwards;
-  font-family: var(--font-google-sans), sans-serif;
-  font-weight: 700;
-  color: #df9433;
+.thank-you-screen-bg-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
-@keyframes msgIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+.thank-you-screen-bg-overlay {
+  z-index: 1;
 }
 
-.celebration-thanks {
-  font-size: 2.4rem;
-  line-height: 1.3;
-  margin-bottom: 8px;
+.thank-you-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  flex: 1;
 }
 
-.celebration-order {
-  font-size: 1.4rem;
-  line-height: 1.4;
-  color: #3F1700;
-}
-
-.thank-you-screen {
+.thank-you-avatar {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 1200px;
+  height: 1200px;
+  margin-top: 472px;
+  flex-shrink: 0;
+  background: url('/avatar_circle_background.svg') center / contain no-repeat;
 }
 
-.thank-you-screen .celebration-msg {
-  position: static;
-  transform: none;
-  animation: thankYouIn 0.8s ease forwards;
+.thank-you-avatar-inner {
+  /* SVG circle diameter is 900 in a 1140 viewBox — photo fits inside the glow ring */
+  width: calc(100% * 900 / 1200);
+  height: calc(100% * 900 / 1200);
+  flex-shrink: 0;
 }
 
-@keyframes thankYouIn {
+.thank-you-avatar-inner--bobbing {
+  animation: lightSunBob 4s ease-in-out infinite;
+}
+
+.thank-you-avatar-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.thank-you-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  opacity: 0;
+}
+
+.thank-you-copy--rise {
+  animation: thankYouCopyRise 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+
+@keyframes thankYouCopyRise {
   from {
+    transform: translateY(100vh);
     opacity: 0;
-    transform: translateY(16px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
+    opacity: 1;
   }
+}
+
+.thank-you-headline {
+  padding: 0 120px;
+  text-align: center;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 96px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #fff;
+}
+
+.thank-you-headline p {
+  margin: 0;
+}
+
+.thank-you-body {
+  max-width: 2200px;
+  margin: 20px 0 0;
+  padding: 0 120px;
+  text-align: center;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 48px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #fff;
 }
 
 /* ─── Check-in QR modal ────────────────────── */
@@ -1184,6 +1225,10 @@ body {
 }
 
 .screen-layer--bright .display-main {
+  height: 100%;
+}
+
+.screen-layer--thank-you .thank-you-screen {
   height: 100%;
 }
 

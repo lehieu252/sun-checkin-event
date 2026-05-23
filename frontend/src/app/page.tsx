@@ -12,9 +12,10 @@ import { API_URL } from '@/lib/config';
 import { getDarkScreenBrightness } from '@/lib/darkBrightness';
 import type { NewCheckinPayload } from '@/lib/types';
 
-const DISPLAY_MS = 10000;
+const DISPLAY_MS = 300000;
 const GAP_MS = 3000;
-const ROTATE_MS = 15000;
+const ROTATE_MS = 300000;
+const SCREEN_LAYER_MS = 800;
 
 type ScreenMode = 'dark' | 'bright';
 
@@ -32,6 +33,7 @@ export default function DisplayPage() {
   const [count, setCount] = useState(0);
   const [checkins, setCheckins] = useState<NewCheckinPayload[]>([]);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
+  const [celebrationFadingOut, setCelebrationFadingOut] = useState(false);
   const [galleryEpoch, setGalleryEpoch] = useState(0);
   const [highlightId, setHighlightId] = useState<number | null>(null);
   const [screenMode, setScreenMode] = useState<ScreenMode>('dark');
@@ -96,20 +98,26 @@ export default function DisplayPage() {
 
     const next = queueRef.current.shift()!;
     phaseRef.current = 'celebrating';
+    setCelebrationFadingOut(false);
     setCelebration({ person: next.person, count: next.count });
 
     clearTimer();
     timerRef.current = setTimeout(() => {
-      setCelebration(null);
-      phaseRef.current = 'gap';
+      setCelebrationFadingOut(true);
 
       timerRef.current = setTimeout(() => {
-        phaseRef.current = 'idle';
-        if (queueRef.current.length === 0) {
-          setRotationEnabled(true);
-        }
-        processQueueRef.current?.();
-      }, GAP_MS);
+        setCelebration(null);
+        setCelebrationFadingOut(false);
+        phaseRef.current = 'gap';
+
+        timerRef.current = setTimeout(() => {
+          phaseRef.current = 'idle';
+          if (queueRef.current.length === 0) {
+            setRotationEnabled(true);
+          }
+          processQueueRef.current?.();
+        }, GAP_MS);
+      }, SCREEN_LAYER_MS);
     }, DISPLAY_MS);
   }, []);
 
@@ -190,6 +198,7 @@ export default function DisplayPage() {
     setCount(0);
     setCheckins([]);
     setCelebration(null);
+    setCelebrationFadingOut(false);
     setGalleryEpoch(0);
     setHighlightId(null);
     setScreenMode('dark');
@@ -222,8 +231,10 @@ export default function DisplayPage() {
   }, [enqueueCelebration, resetDisplay]);
 
   const celebrating = celebration !== null;
-  const showDarkLayer = !celebrating && screenMode === 'dark';
-  const showBrightLayer = celebrating || screenMode === 'bright';
+  const showThankYouLayer = celebrating && !celebrationFadingOut;
+  const showDarkLayer = screenMode === 'dark' && !celebrating;
+  const showBrightLayer =
+    screenMode === 'bright' && (!celebrating || celebrationFadingOut);
   const darkBrightness = getDarkScreenBrightness(count);
 
   return (
@@ -264,20 +275,24 @@ export default function DisplayPage() {
       <div
         className={`screen-layer screen-layer--bright${showBrightLayer ? ' screen-layer--active' : ''}`}
       >
+        <LightScreen
+          count={count}
+          checkins={checkins}
+          galleryEpoch={galleryEpoch}
+          highlightId={highlightId}
+          onQrOpen={() => setQrModalOpen(true)}
+        />
+      </div>
+
+      <div
+        className={`screen-layer screen-layer--thank-you${showThankYouLayer ? ' screen-layer--active' : ''}`}
+      >
         {celebration ? (
           <ThankYou
             name={celebration.person.name}
-            count={celebration.count}
+            photoUrl={celebration.person.photoUrl}
           />
-        ) : (
-          <LightScreen
-            count={count}
-            checkins={checkins}
-            galleryEpoch={galleryEpoch}
-            highlightId={highlightId}
-            onQrOpen={() => setQrModalOpen(true)}
-          />
-        )}
+        ) : null}
       </div>
 
       <CheckinQrModal
