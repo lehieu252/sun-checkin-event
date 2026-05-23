@@ -306,16 +306,16 @@ export default function DisplayPage() {
         <Image
           src="/global_gateway.svg"
           alt="Global Gateway"
-          width={220}
-          height={48}
+          width={323}
+          height={179}
           className="display-logo display-logo--left"
           priority
         />
         <Image
           src="/euro_union.svg"
           alt="European Union"
-          width={150}
-          height={96}
+          width={162}
+          height={132}
           className="display-logo display-logo--right"
           priority
         />

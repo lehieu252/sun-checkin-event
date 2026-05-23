@@ -35,33 +35,33 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
         <Image
           src="/global_gateway_white.svg"
           alt="Global Gateway"
-          width={220}
-          height={48}
+          width={323}
+          height={179}
           className="dark-screen-logo dark-screen-logo--left"
           priority
         />
         <Image
           src="/euro_union_2.svg"
           alt="European Union"
-          width={150}
-          height={96}
+          width={162}
+          height={132}
           className="dark-screen-logo dark-screen-logo--right"
           priority
         />
       </div>
 
-      <div className="dark-screen-body">
-        <div className="dark-screen-slogan dark-screen-slogan--left">
-          <Image
-            src="/plug_in_evolution_2.svg"
-            alt="Plug in to evolution"
-            width={300}
-            height={300}
-            className="dark-slogan-img"
-            priority
-          />
-        </div>
+      <div className="dark-screen-slogan dark-screen-slogan--left">
+        <Image
+          src="/we_are_made_of_sun.svg"
+          alt="We are made of sun"
+          width={745}
+          height={799}
+          className="dark-slogan-img dark-slogan-img--left"
+          priority
+        />
+      </div>
 
+      <div className="dark-screen-body">
         <div className="dark-screen-sun-area">
           <div ref={placeholderRef} className="dark-sun-placeholder" />
         </div>

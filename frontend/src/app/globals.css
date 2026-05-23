@@ -106,21 +106,30 @@ body {
   left: 0;
   right: 0;
   z-index: 20;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 24px 32px;
   pointer-events: none;
 }
 
 .display-logo--left {
-  width: auto;
-  height: 60px;
+  position: absolute;
+  top: 93px;
+  left: 200px;
+  width: 322.98px;
+  height: 178.97px;
 }
 
 .display-logo--right {
-  width: auto;
-  height: 78px;
+  position: absolute;
+  top: 150px;
+  right: 200px;
+  width: 161.9px;
+  height: 131.6px;
+}
+
+.display-logo--left,
+.display-logo--right,
+.dark-screen-logo--left,
+.dark-screen-logo--right {
+  object-fit: contain;
 }
 
 /* ─── Idle layout (Image 1) ────────────────── */
@@ -853,23 +862,28 @@ body {
 }
 
 .dark-screen-header {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 24px 32px;
   pointer-events: none;
 }
 
 .dark-screen-logo--left {
-  width: auto;
-  height: 46px;
+  position: absolute;
+  top: 93px;
+  left: 200px;
+  width: 322.98px;
+  height: 178.97px;
 }
 
 .dark-screen-logo--right {
-  width: auto;
-  height: 78px;
+  position: absolute;
+  top: 150px;
+  right: 200px;
+  width: 161.9px;
+  height: 131.6px;
 }
 
 .dark-screen-body {
@@ -894,7 +908,14 @@ body {
 }
 
 .dark-screen-slogan--left {
-  transform: translateX(-40px);
+  position: absolute;
+  top: 680px;
+  left: 200px;
+  z-index: 10;
+  width: 745px;
+  height: 799px;
+  margin: 0;
+  transform: none;
 }
 
 .dark-screen-slogan--right {
@@ -904,6 +925,12 @@ body {
 .dark-slogan-img {
   width: 100%;
   height: auto;
+}
+
+.dark-slogan-img--left {
+  width: 745px;
+  height: 799px;
+  object-fit: contain;
 }
 
 .dark-screen-sun-area {
