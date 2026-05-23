@@ -49,7 +49,7 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
         />
       </div>
 
-      <div className="dark-screen-slogan dark-screen-slogan--left">
+      <div className="dark-screen-slogan-left">
         <Image
           src="/we_are_made_of_sun.svg"
           alt="We are made of sun"
@@ -58,6 +58,7 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
           className="dark-slogan-img dark-slogan-img--left"
           priority
         />
+        <p className="dark-plug-in-slogan">{t('display.darkPlugInSlogan')}</p>
       </div>
 
       <div className="dark-screen-sun-area">
