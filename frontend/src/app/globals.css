@@ -380,6 +380,41 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  border-radius: 18px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.gallery-entry--highlight {
+  animation: galleryHighlightPulse 3s ease-out;
+  z-index: 2;
+  position: relative;
+}
+
+@keyframes galleryHighlightPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 167, 36, 0);
+  }
+  12% {
+    transform: scale(1.04);
+    box-shadow:
+      0 0 0 4px rgba(255, 167, 36, 0.95),
+      0 12px 32px rgba(217, 59, 22, 0.35);
+  }
+  70% {
+    transform: scale(1.02);
+    box-shadow:
+      0 0 0 3px rgba(255, 167, 36, 0.6),
+      0 8px 24px rgba(217, 59, 22, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 167, 36, 0);
+  }
+}
+
+.gallery-entry--highlight .gallery-photo-card {
+  box-shadow: 0 4px 20px rgba(255, 167, 36, 0.45);
 }
 
 .gallery-photo-card {
@@ -437,4 +472,77 @@ body {
 
 .checkin-page {
   background: #f5f0ee;
+}
+
+/* ─── Admin page ───────────────────────────── */
+
+.admin-page {
+  background: #f8fbea;
+  color: #3f1700;
+  font-family: var(--font-google-sans), var(--font-geist-sans), sans-serif;
+}
+
+.admin-title {
+  color: #3f1700;
+}
+
+.admin-subtitle {
+  color: #6b4a2e;
+}
+
+.admin-stat-card {
+  background: linear-gradient(135deg, #ffa724 0%, #d93b16 100%);
+  color: white;
+}
+
+.admin-stat-label {
+  opacity: 0.9;
+}
+
+.admin-stat-value {
+  line-height: 1;
+}
+
+.admin-reset-btn {
+  background: #d93b16;
+  color: white;
+  transition: opacity 0.2s ease;
+}
+
+.admin-reset-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.admin-error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.admin-success {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.admin-table-wrap {
+  background: white;
+}
+
+.admin-table-header {
+  background: #fff7ed;
+  border-bottom: 1px solid #f0dcc8;
+  color: #3f1700;
+}
+
+.admin-table thead {
+  background: #faf6ef;
+  color: #6b4a2e;
+  font-weight: 600;
+}
+
+.admin-table-row {
+  border-color: #f0e6d8;
+}
+
+.admin-empty {
+  color: #8a7060;
 }

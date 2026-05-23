@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { existsSync } from 'fs';
+import { unlink } from 'fs/promises';
+import { join } from 'path';
 import { Repository } from 'typeorm';
 import { Checkin } from './checkin.entity';
 import { CheckinGateway } from './checkin.gateway';
+
+const uploadsDir = join(process.cwd(), 'uploads');
 
 @Injectable()
 export class CheckinService {
@@ -42,5 +47,21 @@ export class CheckinService {
     return this.checkinRepository.find({
       order: { createdAt: 'DESC' },
     });
+  }
+
+  async resetAll(): Promise<void> {
+    const checkins = await this.checkinRepository.find();
+
+    await Promise.all(
+      checkins.map(async (checkin) => {
+        const filePath = join(uploadsDir, checkin.photoPath);
+        if (existsSync(filePath)) {
+          await unlink(filePath).catch(() => undefined);
+        }
+      }),
+    );
+
+    await this.checkinRepository.clear();
+    this.checkinGateway.broadcastReset();
   }
 }

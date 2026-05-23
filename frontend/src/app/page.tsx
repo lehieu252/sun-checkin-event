@@ -26,6 +26,8 @@ export default function DisplayPage() {
   const [count, setCount] = useState(0);
   const [checkins, setCheckins] = useState<NewCheckinPayload[]>([]);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
+  const [galleryEpoch, setGalleryEpoch] = useState(0);
+  const [highlightId, setHighlightId] = useState<number | null>(null);
   const [sunPos, setSunPos] = useState<{ left: string; top: string } | null>(
     null,
   );
@@ -34,7 +36,9 @@ export default function DisplayPage() {
   const queueRef = useRef<QueueItem[]>([]);
   const phaseRef = useRef<'idle' | 'celebrating' | 'gap'>('idle');
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countRef = useRef(0);
+  const lastCelebrationRef = useRef<Celebration | null>(null);
 
   // Sun resting position from placeholder in left panel
   useEffect(() => {
@@ -52,6 +56,13 @@ export default function DisplayPage() {
     ro.observe(document.documentElement);
     return () => ro.disconnect();
   }, []);
+
+  const clearHighlightTimer = () => {
+    if (highlightTimerRef.current) {
+      clearTimeout(highlightTimerRef.current);
+      highlightTimerRef.current = null;
+    }
+  };
 
   const clearTimer = () => {
     if (timerRef.current) {
@@ -85,6 +96,24 @@ export default function DisplayPage() {
     processQueueRef.current = processQueue;
   }, [processQueue]);
 
+  // Reset gallery viewport + highlight when celebration ends
+  useEffect(() => {
+    const wasCelebrating = lastCelebrationRef.current !== null;
+    const ended = wasCelebrating && celebration === null;
+
+    if (ended && lastCelebrationRef.current) {
+      setGalleryEpoch((e) => e + 1);
+      setHighlightId(lastCelebrationRef.current.person.id);
+
+      clearHighlightTimer();
+      highlightTimerRef.current = setTimeout(() => {
+        setHighlightId(null);
+      }, 3000);
+    }
+
+    lastCelebrationRef.current = celebration;
+  }, [celebration]);
+
   const enqueueCelebration = useCallback(
     (item: QueueItem) => {
       queueRef.current.push(item);
@@ -115,6 +144,20 @@ export default function DisplayPage() {
     fetchInitial();
   }, [fetchInitial]);
 
+  const resetDisplay = useCallback(() => {
+    clearTimer();
+    clearHighlightTimer();
+    queueRef.current = [];
+    phaseRef.current = 'idle';
+    countRef.current = 0;
+    setCount(0);
+    setCheckins([]);
+    setCelebration(null);
+    setGalleryEpoch(0);
+    setHighlightId(null);
+    lastCelebrationRef.current = null;
+  }, []);
+
   useEffect(() => {
     const socket = io(API_URL, { transports: ['websocket', 'polling'] });
 
@@ -126,11 +169,16 @@ export default function DisplayPage() {
       enqueueCelebration({ person: payload, count: c });
     });
 
+    socket.on('reset-checkins', () => {
+      resetDisplay();
+    });
+
     return () => {
       socket.disconnect();
       clearTimer();
+      clearHighlightTimer();
     };
-  }, [enqueueCelebration]);
+  }, [enqueueCelebration, resetDisplay]);
 
   const celebrating = celebration !== null;
 
@@ -211,7 +259,11 @@ export default function DisplayPage() {
         {/* Right panel — 3-column gallery */}
         <div className="display-right">
           {checkins.length > 0 ? (
-            <ThreeColumnGallery checkins={checkins} />
+            <ThreeColumnGallery
+              checkins={checkins}
+              galleryEpoch={galleryEpoch}
+              highlightId={highlightId}
+            />
           ) : (
             <div className="gallery-empty">
               <p>Quét mã QR để check-in!</p>

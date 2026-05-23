@@ -9,6 +9,8 @@ const PX_PER_SEC = 40;
 
 interface ThreeColumnGalleryProps {
   checkins: NewCheckinPayload[];
+  galleryEpoch: number;
+  highlightId: number | null;
 }
 
 function splitIntoColumns(items: NewCheckinPayload[]) {
@@ -20,9 +22,13 @@ function splitIntoColumns(items: NewCheckinPayload[]) {
 function Column({
   items,
   direction,
+  galleryEpoch,
+  highlightId,
 }: {
   items: NewCheckinPayload[];
   direction: 'up' | 'down';
+  galleryEpoch: number;
+  highlightId: number | null;
 }) {
   if (items.length === 0) {
     return <div className="gallery-col gallery-col--empty" />;
@@ -38,7 +44,7 @@ function Column({
   return (
     <div className="gallery-col">
       <div
-        key={items.length}
+        key={`${direction}-${galleryEpoch}-${items.length}`}
         className={`gallery-col-strip gallery-col-strip--${direction}`}
         style={
           {
@@ -48,7 +54,10 @@ function Column({
         }
       >
         {doubled.map((checkin, index) => (
-          <div key={`${checkin.id}-${index}`} className="gallery-entry">
+          <div
+            key={`${checkin.id}-${index}`}
+            className={`gallery-entry${checkin.id === highlightId ? ' gallery-entry--highlight' : ''}`}
+          >
             <div className="gallery-photo-card">
               <Image
                 src={`${API_URL}${checkin.photoUrl}`}
@@ -72,14 +81,33 @@ function Column({
   );
 }
 
-export function ThreeColumnGallery({ checkins }: ThreeColumnGalleryProps) {
+export function ThreeColumnGallery({
+  checkins,
+  galleryEpoch,
+  highlightId,
+}: ThreeColumnGalleryProps) {
   const columns = splitIntoColumns(checkins);
 
   return (
     <div className="gallery-three-col">
-      <Column items={columns[0]} direction="up" />
-      <Column items={columns[1]} direction="down" />
-      <Column items={columns[2]} direction="up" />
+      <Column
+        items={columns[0]}
+        direction="up"
+        galleryEpoch={galleryEpoch}
+        highlightId={highlightId}
+      />
+      <Column
+        items={columns[1]}
+        direction="down"
+        galleryEpoch={galleryEpoch}
+        highlightId={highlightId}
+      />
+      <Column
+        items={columns[2]}
+        direction="up"
+        galleryEpoch={galleryEpoch}
+        highlightId={highlightId}
+      />
     </div>
   );
 }

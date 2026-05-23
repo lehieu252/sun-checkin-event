@@ -3,4 +3,5 @@ export interface NewCheckinPayload {
   name: string;
   message: string;
   photoUrl: string;
+  createdAt?: string;
 }

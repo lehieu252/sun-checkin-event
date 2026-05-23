@@ -20,4 +20,8 @@ export class CheckinGateway {
   broadcastNewCheckin(payload: NewCheckinPayload) {
     this.server.emit('new-checkin', payload);
   }
+
+  broadcastReset() {
+    this.server.emit('reset-checkins');
+  }
 }

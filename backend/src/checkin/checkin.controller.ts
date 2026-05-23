@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   UploadedFile,
@@ -87,6 +88,13 @@ export class CheckinController {
       name: c.name,
       message: c.message,
       photoUrl: `/uploads/${c.photoPath}`,
+      createdAt: c.createdAt,
     }));
+  }
+
+  @Delete()
+  async resetAll() {
+    await this.checkinService.resetAll();
+    return { success: true };
   }
 }
