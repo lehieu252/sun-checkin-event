@@ -5,6 +5,7 @@ import { RefObject } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { OdometerCounter } from '@/components/OdometerCounter';
 import { CHECKIN_URL } from '@/lib/config';
+import { useLanguage } from '@/lib/i18n/context';
 
 interface DarkScreenProps {
   count: number;
@@ -13,6 +14,8 @@ interface DarkScreenProps {
 }
 
 export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="dark-screen">
       <div
@@ -78,7 +81,7 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
       <div className="dark-screen-footer">
         <OdometerCounter count={count} digits={4} label="" />
         <div className="dark-odometer-label">
-          Tia sáng Mặt Trời đã được kích hoạt
+          {t('display.odometerLabel')}
         </div>
 
         <div className="dark-cta-qr-row">
@@ -92,10 +95,8 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
             />
           </div>
           <div className="dark-cta-qr-text">
-            <p className="dark-cta-qr-title">Quét mã ngay</p>
-            <p className="dark-cta-qr-sub">
-              Để check-in và trở thành một phần của Mặt Trời
-            </p>
+            <p className="dark-cta-qr-title">{t('display.qrTitle')}</p>
+            <p className="dark-cta-qr-sub">{t('display.qrSub')}</p>
           </div>
         </div>
       </div>

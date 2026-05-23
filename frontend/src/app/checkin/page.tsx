@@ -2,11 +2,17 @@
 
 import Image from 'next/image';
 import { FormEvent, useState } from 'react';
+import { CheckinLanguagePicker } from '@/components/CheckinLanguagePicker';
 import { API_URL } from '@/lib/config';
+import { useLanguage } from '@/lib/i18n/context';
+import type { Locale } from '@/lib/i18n/types';
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+type CheckinStep = 'language' | 'form';
 
 export default function CheckinPage() {
+  const { t, setLocale } = useLanguage();
+  const [step, setStep] = useState<CheckinStep>('language');
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
@@ -14,6 +20,11 @@ export default function CheckinPage() {
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [inputKey, setInputKey] = useState(0);
+
+  const handleLanguageSelect = (locale: Locale) => {
+    setLocale(locale);
+    setStep('form');
+  };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -27,7 +38,7 @@ export default function CheckinPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !message.trim() || !photo) {
-      setErrorMsg('Vui lòng điền đầy đủ thông tin và chọn ảnh');
+      setErrorMsg(t('checkin.validationError'));
       setStatus('error');
       return;
     }
@@ -50,17 +61,21 @@ export default function CheckinPage() {
         const err = await res.json().catch(() => ({}));
         const msg = (err as { message?: string | string[] }).message;
         const text = Array.isArray(msg) ? msg.join(', ') : msg;
-        throw new Error(text || 'Check-in thất bại');
+        throw new Error(text || t('checkin.submitError'));
       }
 
       setStatus('success');
     } catch (err) {
       setStatus('error');
       setErrorMsg(
-        err instanceof Error ? err.message : 'Có lỗi xảy ra, vui lòng thử lại',
+        err instanceof Error ? err.message : t('checkin.genericError'),
       );
     }
   };
+
+  if (step === 'language') {
+    return <CheckinLanguagePicker onSelect={handleLanguageSelect} />;
+  }
 
   if (status === 'success') {
     return (
@@ -70,11 +85,9 @@ export default function CheckinPage() {
             ✓
           </div>
           <h1 className="text-2xl font-bold text-[#3f1700]">
-            Check-in thành công!
+            {t('checkin.successTitle')}
           </h1>
-          <p className="text-[#6b4a2e]">
-            Cảm ơn bạn đã tham gia. Hãy nhìn lên màn hình lớn nhé!
-          </p>
+          <p className="text-[#6b4a2e]">{t('checkin.successBody')}</p>
         </div>
       </main>
     );
@@ -107,13 +120,13 @@ export default function CheckinPage() {
 
         <div>
           <label className="checkin-label mb-1 block text-sm font-medium">
-            Tên của bạn *
+            {t('checkin.nameLabel')}
           </label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Nhập tên của bạn"
+            placeholder={t('checkin.namePlaceholder')}
             className="checkin-input w-full rounded-xl border px-4 py-3 outline-none"
             required
           />
@@ -121,12 +134,12 @@ export default function CheckinPage() {
 
         <div>
           <label className="checkin-label mb-1 block text-sm font-medium">
-            Lời nhắn *
+            {t('checkin.messageLabel')}
           </label>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Viết lời nhắn của bạn..."
+            placeholder={t('checkin.messagePlaceholder')}
             rows={3}
             className="checkin-input w-full resize-none rounded-xl border px-4 py-3 outline-none"
             required
@@ -135,7 +148,7 @@ export default function CheckinPage() {
 
         <div>
           <label className="checkin-label mb-1 block text-sm font-medium">
-            Ảnh của bạn *
+            {t('checkin.photoLabel')}
           </label>
 
           <input
@@ -161,7 +174,7 @@ export default function CheckinPage() {
                 htmlFor="photo-input"
                 className="checkin-btn-secondary flex cursor-pointer items-center gap-2 rounded-xl border px-5 py-2 text-sm"
               >
-                <span>🔄</span> Chọn ảnh khác
+                <span>🔄</span> {t('checkin.chooseOtherPhoto')}
               </label>
             </div>
           ) : (
@@ -181,9 +194,9 @@ export default function CheckinPage() {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="text-sm font-semibold">Chụp ảnh</span>
+              <span className="text-sm font-semibold">{t('checkin.takePhoto')}</span>
               <span className="checkin-camera-btn-sub text-xs">
-                Mở camera để chụp ảnh hoặc chọn từ thư viện ảnh
+                {t('checkin.takePhotoHint')}
               </span>
             </label>
           )}
@@ -200,7 +213,7 @@ export default function CheckinPage() {
           disabled={status === 'submitting'}
           className="checkin-btn-primary rounded-xl py-4 text-lg font-semibold disabled:opacity-60"
         >
-          {status === 'submitting' ? 'Đang gửi...' : 'Check in'}
+          {status === 'submitting' ? t('checkin.submitting') : t('checkin.submit')}
         </button>
       </form>
     </main>

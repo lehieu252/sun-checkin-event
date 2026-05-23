@@ -5,10 +5,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { QRCodeSVG } from 'qrcode.react';
 import { DarkScreen } from '@/components/DarkScreen';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { OdometerCounter } from '@/components/OdometerCounter';
 import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
 import { API_URL, CHECKIN_URL } from '@/lib/config';
 import { getDarkScreenBrightness } from '@/lib/darkBrightness';
+import { useLanguage } from '@/lib/i18n/context';
 import type { NewCheckinPayload } from '@/lib/types';
 
 const DISPLAY_MS = 10000;
@@ -28,6 +30,7 @@ interface Celebration {
 }
 
 export default function DisplayPage() {
+  const { t } = useLanguage();
   const [count, setCount] = useState(0);
   const [checkins, setCheckins] = useState<NewCheckinPayload[]>([]);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
@@ -255,6 +258,8 @@ export default function DisplayPage() {
 
   return (
     <div className="display-root">
+      <LanguageSwitcher variant="display" />
+
       {/* ─── Dark screen layer ─── */}
       <div
         className={`screen-layer screen-layer--dark${showDarkLayer ? ' screen-layer--active' : ''}`}
@@ -335,7 +340,7 @@ export default function DisplayPage() {
             digits={4}
             label=""
           />
-          <div className="odometer-label">Tia sáng Mặt Trời đã được kích hoạt</div>
+          <div className="odometer-label">{t('display.odometerLabel')}</div>
           <div className="cta-qr-row">
             <div className="cta-qr-box">
               <QRCodeSVG
@@ -347,10 +352,8 @@ export default function DisplayPage() {
               />
             </div>
             <div className="cta-qr-text">
-              <p className="cta-qr-title">Quét mã ngay</p>
-              <p className="cta-qr-sub">
-                Để check-in và trở thành một phần của Mặt Trời
-              </p>
+              <p className="cta-qr-title">{t('display.qrTitle')}</p>
+              <p className="cta-qr-sub">{t('display.qrSub')}</p>
             </div>
           </div>
         </div>
@@ -365,7 +368,7 @@ export default function DisplayPage() {
             />
           ) : (
             <div className="gallery-empty">
-              <p>Quét mã QR để check-in!</p>
+              <p>{t('display.galleryEmpty')}</p>
             </div>
           )}
         </div>
@@ -396,10 +399,10 @@ export default function DisplayPage() {
       {celebration && (
         <div className="celebration-msg">
           <p className="celebration-thanks">
-            Cảm ơn {celebration.person.name} đã trở thành một phần của Mặt Trời
+            {t('display.celebrationThanks', { name: celebration.person.name })}
           </p>
           <p className="celebration-order">
-            Bạn là tia sáng Mặt Trời thứ {celebration.count} được kích hoạt
+            {t('display.celebrationOrder', { count: celebration.count })}
           </p>
         </div>
       )}
