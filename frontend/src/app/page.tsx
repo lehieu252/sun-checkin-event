@@ -1,17 +1,14 @@
 'use client';
 
-import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
-import { QRCodeSVG } from 'qrcode.react';
 import { DarkScreen } from '@/components/DarkScreen';
 import { DisplayKioskPrompt } from '@/components/DisplayKioskPrompt';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { OdometerCounter } from '@/components/OdometerCounter';
-import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
-import { API_URL, CHECKIN_URL } from '@/lib/config';
+import { LightScreen } from '@/components/LightScreen';
+import { ThankYou } from '@/components/ThankYou';
+import { API_URL } from '@/lib/config';
 import { getDarkScreenBrightness } from '@/lib/darkBrightness';
-import { useLanguage } from '@/lib/i18n/context';
 import type { NewCheckinPayload } from '@/lib/types';
 
 const DISPLAY_MS = 10000;
@@ -31,7 +28,6 @@ interface Celebration {
 }
 
 export default function DisplayPage() {
-  const { t } = useLanguage();
   const [count, setCount] = useState(0);
   const [checkins, setCheckins] = useState<NewCheckinPayload[]>([]);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
@@ -39,15 +35,11 @@ export default function DisplayPage() {
   const [highlightId, setHighlightId] = useState<number | null>(null);
   const [screenMode, setScreenMode] = useState<ScreenMode>('dark');
   const [rotationEnabled, setRotationEnabled] = useState(true);
-  const [sunPos, setSunPos] = useState<{ left: string; top: string } | null>(
-    null,
-  );
   const [darkSunPos, setDarkSunPos] = useState<{
     left: string;
     top: string;
   } | null>(null);
 
-  const placeholderRef = useRef<HTMLDivElement>(null);
   const displayRootRef = useRef<HTMLDivElement>(null);
   const darkPlaceholderRef = useRef<HTMLDivElement>(null);
   const queueRef = useRef<QueueItem[]>([]);
@@ -58,24 +50,6 @@ export default function DisplayPage() {
   const countRef = useRef(0);
   const lastCelebrationRef = useRef<Celebration | null>(null);
 
-  // Sun resting position from placeholder in left panel
-  useEffect(() => {
-    const el = placeholderRef.current;
-    if (!el) return;
-    const update = () => {
-      const r = el.getBoundingClientRect();
-      setSunPos({
-        left: `${r.left + r.width / 2}px`,
-        top: `${r.top + r.height / 2}px`,
-      });
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(document.documentElement);
-    return () => ro.disconnect();
-  }, []);
-
-  // Dark screen sun position
   useEffect(() => {
     const el = darkPlaceholderRef.current;
     if (!el) return;
@@ -141,7 +115,6 @@ export default function DisplayPage() {
     processQueueRef.current = processQueue;
   }, [processQueue]);
 
-  // Reset gallery viewport + highlight when celebration ends
   useEffect(() => {
     const wasCelebrating = lastCelebrationRef.current !== null;
     const ended = wasCelebrating && celebration === null;
@@ -170,7 +143,6 @@ export default function DisplayPage() {
     [processQueue],
   );
 
-  // Alternate dark / bright every 15s when idle
   useEffect(() => {
     if (!rotationEnabled || celebration !== null) {
       clearRotateTimer();
@@ -251,19 +223,11 @@ export default function DisplayPage() {
   const showBrightLayer = celebrating || screenMode === 'bright';
   const darkBrightness = getDarkScreenBrightness(count);
 
-  const sunLeft = celebrating ? '50vw' : (sunPos?.left ?? '-999px');
-  const sunTop = celebrating ? '42vh' : (sunPos?.top ?? '-999px');
-  const sunScale = celebrating ? 1.5 : 0.75;
-  const sunTransition = sunPos
-    ? 'left 1.4s cubic-bezier(0.34,1.1,0.64,1), top 1.4s ease-in-out, transform 1.4s cubic-bezier(0.34,1.1,0.64,1)'
-    : 'none';
-
   return (
     <div ref={displayRootRef} className="display-root">
       <DisplayKioskPrompt containerRef={displayRootRef} />
       <LanguageSwitcher variant="display" />
 
-      {/* ─── Dark screen layer ─── */}
       <div
         className={`screen-layer screen-layer--dark${showDarkLayer ? ' screen-layer--active' : ''}`}
       >
@@ -293,123 +257,22 @@ export default function DisplayPage() {
         )}
       </div>
 
-      {/* ─── Bright check-in screen layer ─── */}
       <div
         className={`screen-layer screen-layer--bright${showBrightLayer ? ' screen-layer--active' : ''}`}
       >
-    <main className="display-main">
-      {/* Top gradient — mirror of bottom, at header */}
-      <div className="display-top-gradient" aria-hidden="true" />
-
-      {/* Header logos */}
-      <div className="display-header">
-        <Image
-          src="/global_gateway.svg"
-          alt="Global Gateway"
-          width={323}
-          height={179}
-          className="display-logo display-logo--left"
-          priority
-        />
-        <Image
-          src="/euro_union.svg"
-          alt="European Union"
-          width={162}
-          height={132}
-          className="display-logo display-logo--right"
-          priority
-        />
-      </div>
-
-      {/* Idle layout — hidden during celebration */}
-      <div
-        className={`display-idle${celebrating ? ' display-idle--hidden' : ''}`}
-      >
-        {/* Left panel */}
-        <div className="display-left">
-          <div ref={placeholderRef} className="sun-placeholder" />
-
-          <Image
-            src="/plug_in_evolution.svg"
-            alt="Plug in to evolution"
-            width={480}
-            height={56}
-            className="plug-in-logo"
-            priority
+        {celebration ? (
+          <ThankYou
+            name={celebration.person.name}
+            count={celebration.count}
           />
-
-          <OdometerCounter
+        ) : (
+          <LightScreen
             count={count}
-            digits={4}
-            label=""
+            checkins={checkins}
+            galleryEpoch={galleryEpoch}
+            highlightId={highlightId}
           />
-          <div className="odometer-label">{t('display.odometerLabel')}</div>
-          <div className="cta-qr-row">
-            <div className="cta-qr-box">
-              <QRCodeSVG
-                value={CHECKIN_URL}
-                size={112}
-                level="H"
-                includeMargin={false}
-                fgColor="#3F1700"
-              />
-            </div>
-            <div className="cta-qr-text">
-              <p className="cta-qr-title">{t('display.qrTitle')}</p>
-              <p className="cta-qr-sub">{t('display.qrSub')}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Right panel — 3-column gallery */}
-        <div className="display-right">
-          {checkins.length > 0 ? (
-            <ThreeColumnGallery
-              checkins={checkins}
-              galleryEpoch={galleryEpoch}
-              highlightId={highlightId}
-            />
-          ) : (
-            <div className="gallery-empty">
-              <p>{t('display.galleryEmpty')}</p>
-            </div>
-          )}
-        </div>
-
-        {/* Bottom gradient — CSS linear gradient per design spec */}
-        <div className="display-bottom-gradient" aria-hidden="true" />
-      </div>
-
-      {/* Fixed sun — bright SVG with bob animation */}
-      {sunPos && showBrightLayer && (
-        <div
-          className="sun-fixed"
-          style={{
-            left: sunLeft,
-            top: sunTop,
-            transition: sunTransition,
-            transform: `translate(-50%, -50%) scale(${sunScale})`,
-          }}
-        >
-          <div className="sun-inner sun-inner--bobbing">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/sun_dark.svg" alt="Sun" className="sun-svg" />
-          </div>
-        </div>
-      )}
-
-      {/* Celebration message */}
-      {celebration && (
-        <div className="celebration-msg">
-          <p className="celebration-thanks">
-            {t('display.celebrationThanks', { name: celebration.person.name })}
-          </p>
-          <p className="celebration-order">
-            {t('display.celebrationOrder', { count: celebration.count })}
-          </p>
-        </div>
-      )}
-    </main>
+        )}
       </div>
     </div>
   );

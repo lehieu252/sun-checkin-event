@@ -342,6 +342,29 @@ body {
   color: #3F1700;
 }
 
+.thank-you-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thank-you-screen .celebration-msg {
+  position: static;
+  transform: none;
+  animation: thankYouIn 0.8s ease forwards;
+}
+
+@keyframes thankYouIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ─── Three-column gallery ─────────────────── */
 
 .gallery-three-col {
