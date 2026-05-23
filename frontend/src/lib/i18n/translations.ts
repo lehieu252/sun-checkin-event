@@ -17,6 +17,7 @@ const vi = {
     darkRightParagraph2:
       'Sự hiện diện của bạn tại đây là một đơn vị ánh sáng được thêm vào hành trình ấy, để những kết nối nhỏ cùng tạo nên thay đổi bền vững.',
     slideCheckIn: 'Check in ngay',
+    darkCounterLabel: 'Đơn vị ánh sáng đã được đóng góp',
   },
   checkin: {
     langTitle: 'Chọn ngôn ngữ',
@@ -56,6 +57,7 @@ const en = {
     darkRightParagraph2:
       'Your presence here becomes a unit of light added to that journey, where small connections come together to create sustainable change.',
     slideCheckIn: 'Check in now',
+    darkCounterLabel: 'Units of light contributed',
   },
   checkin: {
     langTitle: 'Choose language',
@@ -93,6 +95,7 @@ export type TranslationTree = {
     darkRightParagraph1: string;
     darkRightParagraph2: string;
     slideCheckIn: string;
+    darkCounterLabel: string;
   };
   checkin: {
     langTitle: string;

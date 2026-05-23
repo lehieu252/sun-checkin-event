@@ -2,10 +2,8 @@
 
 import Image from 'next/image';
 import { RefObject } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
-import { OdometerCounter } from '@/components/OdometerCounter';
+import { DarkOdometerCounter } from '@/components/DarkOdometerCounter';
 import { SlideToCheckIn } from '@/components/SlideToCheckIn';
-import { CHECKIN_URL } from '@/lib/config';
 import { useLanguage } from '@/lib/i18n/context';
 
 interface DarkScreenProps {
@@ -75,25 +73,9 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
       </div>
 
       <div className="dark-screen-footer">
-        <OdometerCounter count={count} digits={4} label="" />
+        <DarkOdometerCounter count={count} digits={4} />
         <div className="dark-odometer-label">
-          {t('display.odometerLabel')}
-        </div>
-
-        <div className="dark-cta-qr-row">
-          <div className="dark-cta-qr-box">
-            <QRCodeSVG
-              value={CHECKIN_URL}
-              size={88}
-              level="H"
-              includeMargin={false}
-              fgColor="#3F1700"
-            />
-          </div>
-          <div className="dark-cta-qr-text">
-            <p className="dark-cta-qr-title">{t('display.qrTitle')}</p>
-            <p className="dark-cta-qr-sub">{t('display.qrSub')}</p>
-          </div>
+          {t('display.darkCounterLabel')}
         </div>
       </div>
     </div>

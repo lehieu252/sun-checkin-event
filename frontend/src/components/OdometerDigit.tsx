@@ -4,9 +4,15 @@ import { useEffect, useRef, useState } from 'react';
 
 interface OdometerDigitProps {
   digit: string;
+  variant?: 'default' | 'dark';
+  active?: boolean;
 }
 
-export function OdometerDigit({ digit }: OdometerDigitProps) {
+export function OdometerDigit({
+  digit,
+  variant = 'default',
+  active = true,
+}: OdometerDigitProps) {
   const [displayDigit, setDisplayDigit] = useState(digit);
   const [isFlipping, setIsFlipping] = useState(false);
   const prevDigit = useRef(digit);
@@ -24,9 +30,21 @@ export function OdometerDigit({ digit }: OdometerDigitProps) {
   }, [digit]);
 
   return (
-    <div className="odometer-digit-box">
+    <div
+      className={`odometer-digit-box${
+        variant === 'dark' ? ' dark-odometer-digit-box' : ''
+      }`}
+    >
       <span
-        className={`odometer-digit-text ${isFlipping ? 'odometer-flip' : ''}`}
+        className={`odometer-digit-text${
+          variant === 'dark' ? ' dark-odometer-digit-text' : ''
+        }${
+          variant === 'dark'
+            ? active
+              ? ' dark-odometer-digit-text--active'
+              : ' dark-odometer-digit-text--inactive'
+            : ''
+        } ${isFlipping ? 'odometer-flip' : ''}`}
       >
         {displayDigit}
       </span>
