@@ -13,7 +13,7 @@ const GALLERY_LAYOUT = {
   light: {
     cardGap: 34,
     photoHeight: 1140,
-    messageMinHeight: 475,
+    messageMinHeight: 420,
   },
 } as const;
 
