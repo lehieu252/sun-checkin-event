@@ -61,21 +61,13 @@ export function DarkScreen({ count, brightness, placeholderRef }: DarkScreenProp
         />
       </div>
 
-      <div className="dark-screen-body">
-        <div className="dark-screen-sun-area">
-          <div ref={placeholderRef} className="dark-sun-placeholder" />
-        </div>
+      <div className="dark-screen-sun-area">
+        <div ref={placeholderRef} className="dark-sun-placeholder" />
+      </div>
 
-        <div className="dark-screen-slogan dark-screen-slogan--right">
-          <Image
-            src="/nhan_ket_noi.svg"
-            alt="Nhấn kết nối bật thay đổi"
-            width={300}
-            height={300}
-            className="dark-slogan-img"
-            priority
-          />
-        </div>
+      <div className="dark-screen-slogan dark-screen-slogan--right">
+        <p className="dark-slogan-text">{t('display.darkRightParagraph1')}</p>
+        <p className="dark-slogan-text">{t('display.darkRightParagraph2')}</p>
       </div>
 
       <div className="dark-screen-footer">

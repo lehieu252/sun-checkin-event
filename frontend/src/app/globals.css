@@ -15,6 +15,11 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-gilroy: var(--font-gilroy);
+  --font-barlow: var(--font-barlow);
+  --font-seona: var(--font-seona);
+  --font-artnik: var(--font-artnik);
+  --font-arial-bold: var(--font-arial-bold);
 }
 
 body {
@@ -886,18 +891,6 @@ body {
   height: 131.6px;
 }
 
-.dark-screen-body {
-  position: relative;
-  z-index: 5;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(16px, 4vw, 48px);
-  padding: 0 24px;
-  margin-top: -40px;
-}
-
 .dark-screen-slogan {
   flex-shrink: 0;
   display: flex;
@@ -919,7 +912,26 @@ body {
 }
 
 .dark-screen-slogan--right {
-  transform: translateX(40px);
+  position: absolute;
+  top: 677px;
+  right: 200px;
+  z-index: 10;
+  width: 745px;
+  margin: 0;
+  transform: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.dark-slogan-text {
+  margin: 0;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 48px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #fff;
+  text-align: left;
 }
 
 .dark-slogan-img {
@@ -934,23 +946,23 @@ body {
 }
 
 .dark-screen-sun-area {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 320px;
+  left: 50%;
+  z-index: 5;
+  transform: translateX(-50%);
 }
 
 .dark-sun-placeholder {
-  width: 570px;
-  height: 390px;
-  max-width: 52vw;
+  width: 1578.5px;
+  height: 1280px;
 }
 
 .dark-sun-svg {
   display: block;
-  width: 570px;
-  height: auto;
-  max-width: 52vw;
+  width: 1578.5px;
+  height: 1280px;
+  object-fit: contain;
   background: transparent;
 }
 
