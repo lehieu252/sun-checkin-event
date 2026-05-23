@@ -246,7 +246,7 @@ export default function DisplayPage() {
 
   const sunLeft = celebrating ? '50vw' : (sunPos?.left ?? '-999px');
   const sunTop = celebrating ? '42vh' : (sunPos?.top ?? '-999px');
-  const sunScale = celebrating ? 2 : 1;
+  const sunScale = celebrating ? 1.5 : 0.75;
   const sunTransition = sunPos
     ? 'left 1.4s cubic-bezier(0.34,1.1,0.64,1), top 1.4s ease-in-out, transform 1.4s cubic-bezier(0.34,1.1,0.64,1)'
     : 'none';
@@ -378,7 +378,7 @@ export default function DisplayPage() {
         >
           <div className="sun-inner sun-inner--bobbing">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/sun.svg" alt="Sun" className="sun-svg" />
+            <img src="/sun_dark.svg" alt="Sun" className="sun-svg" />
           </div>
         </div>
       )}

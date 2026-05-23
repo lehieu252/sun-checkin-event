@@ -46,8 +46,8 @@ export function DarkScreen({ count, placeholderRef }: DarkScreenProps) {
           <Image
             src="/plug_in_evolution_2.svg"
             alt="Plug in to evolution"
-            width={120}
-            height={200}
+            width={300}
+            height={300}
             className="dark-slogan-img"
             priority
           />
@@ -61,8 +61,8 @@ export function DarkScreen({ count, placeholderRef }: DarkScreenProps) {
           <Image
             src="/nhan_ket_noi.svg"
             alt="Nhấn kết nối bật thay đổi"
-            width={120}
-            height={200}
+            width={300}
+            height={300}
             className="dark-slogan-img"
             priority
           />
@@ -71,15 +71,15 @@ export function DarkScreen({ count, placeholderRef }: DarkScreenProps) {
 
       <div className="dark-screen-footer">
         <OdometerCounter count={count} digits={4} label="" />
-        <p className="dark-odometer-label">
+        <div className="dark-odometer-label">
           Tia sáng Mặt Trời đã được kích hoạt
-        </p>
+        </div>
 
         <div className="dark-cta-qr-row">
           <div className="dark-cta-qr-box">
             <QRCodeSVG
               value={CHECKIN_URL}
-              size={112}
+              size={88}
               level="H"
               includeMargin={false}
               fgColor="#3F1700"
