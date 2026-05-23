@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { QRCodeSVG } from 'qrcode.react';
+import { DarkScreen } from '@/components/DarkScreen';
 import { OdometerCounter } from '@/components/OdometerCounter';
 import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
 import { API_URL, CHECKIN_URL } from '@/lib/config';
@@ -11,6 +12,9 @@ import type { NewCheckinPayload } from '@/lib/types';
 
 const DISPLAY_MS = 10000;
 const GAP_MS = 3000;
+const ROTATE_MS = 15000;
+
+type ScreenMode = 'dark' | 'bright';
 
 interface QueueItem {
   person: NewCheckinPayload;
@@ -28,15 +32,23 @@ export default function DisplayPage() {
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const [galleryEpoch, setGalleryEpoch] = useState(0);
   const [highlightId, setHighlightId] = useState<number | null>(null);
+  const [screenMode, setScreenMode] = useState<ScreenMode>('dark');
+  const [rotationEnabled, setRotationEnabled] = useState(true);
   const [sunPos, setSunPos] = useState<{ left: string; top: string } | null>(
     null,
   );
+  const [darkSunPos, setDarkSunPos] = useState<{
+    left: string;
+    top: string;
+  } | null>(null);
 
   const placeholderRef = useRef<HTMLDivElement>(null);
+  const darkPlaceholderRef = useRef<HTMLDivElement>(null);
   const queueRef = useRef<QueueItem[]>([]);
   const phaseRef = useRef<'idle' | 'celebrating' | 'gap'>('idle');
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rotateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countRef = useRef(0);
   const lastCelebrationRef = useRef<Celebration | null>(null);
 
@@ -56,6 +68,30 @@ export default function DisplayPage() {
     ro.observe(document.documentElement);
     return () => ro.disconnect();
   }, []);
+
+  // Dark screen sun position
+  useEffect(() => {
+    const el = darkPlaceholderRef.current;
+    if (!el) return;
+    const update = () => {
+      const r = el.getBoundingClientRect();
+      setDarkSunPos({
+        left: `${r.left + r.width / 2}px`,
+        top: `${r.top + r.height / 2}px`,
+      });
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [screenMode]);
+
+  const clearRotateTimer = () => {
+    if (rotateTimerRef.current) {
+      clearTimeout(rotateTimerRef.current);
+      rotateTimerRef.current = null;
+    }
+  };
 
   const clearHighlightTimer = () => {
     if (highlightTimerRef.current) {
@@ -87,6 +123,9 @@ export default function DisplayPage() {
 
       timerRef.current = setTimeout(() => {
         phaseRef.current = 'idle';
+        if (queueRef.current.length === 0) {
+          setRotationEnabled(true);
+        }
         processQueueRef.current?.();
       }, GAP_MS);
     }, DISPLAY_MS);
@@ -116,11 +155,28 @@ export default function DisplayPage() {
 
   const enqueueCelebration = useCallback(
     (item: QueueItem) => {
+      clearRotateTimer();
+      setRotationEnabled(false);
+      setScreenMode('bright');
       queueRef.current.push(item);
       processQueue();
     },
     [processQueue],
   );
+
+  // Alternate dark / bright every 15s when idle
+  useEffect(() => {
+    if (!rotationEnabled || celebration !== null) {
+      clearRotateTimer();
+      return;
+    }
+
+    rotateTimerRef.current = setTimeout(() => {
+      setScreenMode((prev) => (prev === 'dark' ? 'bright' : 'dark'));
+    }, ROTATE_MS);
+
+    return () => clearRotateTimer();
+  }, [rotationEnabled, celebration, screenMode]);
 
   const fetchInitial = useCallback(async () => {
     try {
@@ -147,6 +203,7 @@ export default function DisplayPage() {
   const resetDisplay = useCallback(() => {
     clearTimer();
     clearHighlightTimer();
+    clearRotateTimer();
     queueRef.current = [];
     phaseRef.current = 'idle';
     countRef.current = 0;
@@ -155,6 +212,8 @@ export default function DisplayPage() {
     setCelebration(null);
     setGalleryEpoch(0);
     setHighlightId(null);
+    setScreenMode('dark');
+    setRotationEnabled(true);
     lastCelebrationRef.current = null;
   }, []);
 
@@ -177,10 +236,13 @@ export default function DisplayPage() {
       socket.disconnect();
       clearTimer();
       clearHighlightTimer();
+      clearRotateTimer();
     };
   }, [enqueueCelebration, resetDisplay]);
 
   const celebrating = celebration !== null;
+  const showDarkLayer = !celebrating && screenMode === 'dark';
+  const showBrightLayer = celebrating || screenMode === 'bright';
 
   const sunLeft = celebrating ? '50vw' : (sunPos?.left ?? '-999px');
   const sunTop = celebrating ? '42vh' : (sunPos?.top ?? '-999px');
@@ -190,6 +252,34 @@ export default function DisplayPage() {
     : 'none';
 
   return (
+    <div className="display-root">
+      {/* ─── Dark screen layer ─── */}
+      <div
+        className={`screen-layer screen-layer--dark${showDarkLayer ? ' screen-layer--active' : ''}`}
+      >
+        <DarkScreen count={count} placeholderRef={darkPlaceholderRef} />
+
+        {darkSunPos && showDarkLayer && (
+          <div
+            className="sun-fixed dark-sun-fixed"
+            style={{
+              left: darkSunPos.left,
+              top: darkSunPos.top,
+              transform: 'translate(-50%, -50%) scale(1)',
+            }}
+          >
+            <div className="sun-inner sun-inner--bobbing">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/sun_dark.svg" alt="Sun" className="dark-sun-svg" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ─── Bright check-in screen layer ─── */}
+      <div
+        className={`screen-layer screen-layer--bright${showBrightLayer ? ' screen-layer--active' : ''}`}
+      >
     <main className="display-main">
       {/* Top gradient — mirror of bottom, at header */}
       <div className="display-top-gradient" aria-hidden="true" />
@@ -275,8 +365,8 @@ export default function DisplayPage() {
         <div className="display-bottom-gradient" aria-hidden="true" />
       </div>
 
-      {/* Fixed sun — SVG with bob animation */}
-      {sunPos && (
+      {/* Fixed sun — bright SVG with bob animation */}
+      {sunPos && showBrightLayer && (
         <div
           className="sun-fixed"
           style={{
@@ -305,5 +395,7 @@ export default function DisplayPage() {
         </div>
       )}
     </main>
+      </div>
+    </div>
   );
 }
