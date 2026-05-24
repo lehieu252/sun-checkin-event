@@ -925,14 +925,104 @@ body {
 }
 
 .checkin-page--form {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
-  padding-bottom: 24px;
+  box-sizing: border-box;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 8px)
+    16px
+    calc(env(safe-area-inset-bottom, 0px) + 8px);
 }
 
 .checkin-page--form .checkin-form {
-  padding-top: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: clamp(6px, 1.35dvh, 14px);
+  width: 100%;
+  max-width: 28rem;
+  min-height: 0;
+  max-height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.checkin-page--form .checkin-header {
+  flex-shrink: 1;
+  min-height: 0;
+  margin-bottom: 0;
+}
+
+.checkin-page--form .checkin-sun-img {
+  max-height: clamp(68px, 13.5dvh, 150px);
+  width: min(100%, 250px);
+  height: auto;
+  object-fit: contain;
+}
+
+.checkin-page--form .checkin-field-label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: clamp(0.75rem, 1.8dvh, 0.875rem);
+  font-weight: 500;
+}
+
+.checkin-page--form .checkin-input {
+  padding-top: clamp(8px, 1.1dvh, 12px);
+  padding-bottom: clamp(8px, 1.1dvh, 12px);
+}
+
+.checkin-page--form textarea.checkin-input {
+  min-height: clamp(52px, 7.5dvh, 72px);
+  max-height: clamp(52px, 7.5dvh, 72px);
+  line-height: 1.35;
+}
+
+.checkin-page--form .checkin-camera-btn {
+  padding: clamp(10px, 1.6dvh, 16px) 16px;
+  gap: clamp(4px, 0.8dvh, 8px);
+}
+
+.checkin-page--form .checkin-camera-btn svg {
+  width: clamp(22px, 3.8dvh, 30px);
+  height: clamp(22px, 3.8dvh, 30px);
+}
+
+.checkin-page--form .checkin-camera-btn-sub {
+  font-size: clamp(0.65rem, 1.6dvh, 0.75rem);
+}
+
+.checkin-page--form .checkin-photo-preview {
+  gap: clamp(6px, 1.2dvh, 12px);
+}
+
+.checkin-page--form .checkin-photo-ring {
+  width: clamp(88px, 13dvh, 128px);
+  height: clamp(88px, 13dvh, 128px);
+  flex-shrink: 0;
+}
+
+.checkin-page--form .checkin-btn-primary {
+  margin-top: auto;
+  flex-shrink: 0;
+  padding-top: clamp(10px, 1.5dvh, 16px);
+  padding-bottom: clamp(10px, 1.5dvh, 16px);
+  font-size: clamp(1rem, 2.2dvh, 1.125rem);
+}
+
+@media (max-height: 680px) {
+  .checkin-page--form .checkin-sun-img {
+    max-height: clamp(56px, 11dvh, 120px);
+  }
+
+  .checkin-page--form .checkin-form {
+    gap: clamp(4px, 1dvh, 10px);
+  }
 }
 
 .checkin-lang-sun-img {
