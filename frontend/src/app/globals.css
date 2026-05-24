@@ -632,6 +632,16 @@ body {
   opacity: 0;
 }
 
+.checkin-qr-modal__countdown {
+  margin: 0 0 40px;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 48px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #ffffff;
+  text-align: center;
+}
+
 .checkin-qr-modal__qr-box {
   width: 750px;
   height: 750px;

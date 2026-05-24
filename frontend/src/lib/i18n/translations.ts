@@ -5,7 +5,7 @@ const vi = {
     odometerLabel: 'Tia sáng Mặt Trời đã được kích hoạt',
     qrTitle: 'Quét mã ngay',
     qrSub: 'Để check-in và trở thành một phần của Mặt Trời',
-    qrCountdown: 'Tự động đóng sau {seconds}s',
+    qrCountdown: 'Mã QR sẽ đóng sau {seconds} giây',
     qrModalClose: 'Đóng mã QR',
     qrModalHeadline:
       'Quét mã để check-in và tiếp tục hành trình của ánh sáng',
@@ -58,7 +58,7 @@ const en = {
     odometerLabel: 'Sun rays have been activated',
     qrTitle: 'Scan now',
     qrSub: 'Check in and become part of the Sun',
-    qrCountdown: 'Closing in {seconds}s',
+    qrCountdown: 'QR code will close in {seconds} seconds',
     qrModalClose: 'Close QR code',
     qrModalHeadline:
       'Scan the code to upload your check-in photo and move the light forward',

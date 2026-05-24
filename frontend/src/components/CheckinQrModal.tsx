@@ -20,6 +20,7 @@ export function CheckinQrModal({ open, onClose }: CheckinQrModalProps) {
   const [mounted, setMounted] = useState(false);
   const [active, setActive] = useState(false);
   const [closing, setClosing] = useState(false);
+  const [secondsRemaining, setSecondsRemaining] = useState(DISPLAY_SECONDS);
 
   useEffect(() => {
     onCloseRef.current = onClose;
@@ -54,6 +55,7 @@ export function CheckinQrModal({ open, onClose }: CheckinQrModalProps) {
     dismissingRef.current = false;
     setMounted(true);
     setClosing(false);
+    setSecondsRemaining(DISPLAY_SECONDS);
 
     const enterFrame = requestAnimationFrame(() => {
       requestAnimationFrame(() => setActive(true));
@@ -62,6 +64,7 @@ export function CheckinQrModal({ open, onClose }: CheckinQrModalProps) {
     let remaining = DISPLAY_SECONDS;
     const interval = window.setInterval(() => {
       remaining -= 1;
+      setSecondsRemaining(remaining);
       if (remaining <= 0) {
         window.clearInterval(interval);
         dismiss();
@@ -93,6 +96,9 @@ export function CheckinQrModal({ open, onClose }: CheckinQrModalProps) {
       />
 
       <div className="checkin-qr-modal__panel">
+        <p className="checkin-qr-modal__countdown">
+          {t('display.qrCountdown', { seconds: secondsRemaining })}
+        </p>
         <div className="checkin-qr-modal__qr-box">
           <QRCodeSVG
             value={CHECKIN_URL}

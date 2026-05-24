@@ -14,7 +14,7 @@ import type { NewCheckinPayload } from '@/lib/types';
 
 const DISPLAY_MS = 10000;
 const GAP_MS = 3000;
-const ROTATE_MS = 15000;
+const ROTATE_MS = 30000;
 const SCREEN_LAYER_MS = 800;
 
 type ScreenMode = 'dark' | 'bright';
