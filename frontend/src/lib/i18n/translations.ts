@@ -43,6 +43,9 @@ const vi = {
     submitting: 'Đang gửi...',
     successTitle: 'Check-in thành công!',
     successBody: 'Cảm ơn bạn đã tham gia. Hãy nhìn lên màn hình lớn nhé!',
+    exportGenerating: 'Đang tạo ảnh check-in...',
+    exportDownload: 'Tải ảnh check-in',
+    exportError: 'Không thể tạo ảnh. Vui lòng thử lại.',
     validationError: 'Vui lòng điền đầy đủ thông tin và chọn ảnh',
     submitError: 'Check-in thất bại',
     genericError: 'Có lỗi xảy ra, vui lòng thử lại',
@@ -92,6 +95,9 @@ const en = {
     submitting: 'Submitting...',
     successTitle: 'Check-in successful!',
     successBody: 'Thank you for joining. Look up at the big screen!',
+    exportGenerating: 'Creating your check-in image...',
+    exportDownload: 'Download check-in image',
+    exportError: 'Could not create image. Please try again.',
     validationError: 'Please fill in all fields and select a photo',
     submitError: 'Check-in failed',
     genericError: 'Something went wrong, please try again',
@@ -136,6 +142,9 @@ export type TranslationTree = {
     submitting: string;
     successTitle: string;
     successBody: string;
+    exportGenerating: string;
+    exportDownload: string;
+    exportError: string;
     validationError: string;
     submitError: string;
     genericError: string;

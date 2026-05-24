@@ -1,17 +1,19 @@
 'use client';
 
 import Image from 'next/image';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { CheckinLanguagePicker } from '@/components/CheckinLanguagePicker';
 import { API_URL } from '@/lib/config';
+import { generateCheckinExportImage } from '@/lib/generateCheckinExportImage';
 import { useLanguage } from '@/lib/i18n/context';
 import type { Locale } from '@/lib/i18n/types';
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 type CheckinStep = 'language' | 'form';
+type ExportStatus = 'idle' | 'loading' | 'ready' | 'error';
 
 export default function CheckinPage() {
-  const { t, setLocale } = useLanguage();
+  const { t, locale, setLocale } = useLanguage();
   const [step, setStep] = useState<CheckinStep>('language');
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
@@ -20,9 +22,11 @@ export default function CheckinPage() {
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [inputKey, setInputKey] = useState(0);
+  const [exportStatus, setExportStatus] = useState<ExportStatus>('idle');
+  const [exportUrl, setExportUrl] = useState<string | null>(null);
 
-  const handleLanguageSelect = (locale: Locale) => {
-    setLocale(locale);
+  const handleLanguageSelect = (selectedLocale: Locale) => {
+    setLocale(selectedLocale);
     setStep('form');
   };
 
@@ -34,6 +38,39 @@ export default function CheckinPage() {
     setPreview(URL.createObjectURL(file));
     setInputKey((k) => k + 1);
   };
+
+  useEffect(() => {
+    if (status !== 'success' || !photo || !name.trim()) return;
+
+    let cancelled = false;
+    setExportStatus('loading');
+    setExportUrl(null);
+
+    generateCheckinExportImage({
+      photo,
+      name: name.trim(),
+      locale,
+    })
+      .then((blob) => {
+        if (cancelled) return;
+        setExportUrl(URL.createObjectURL(blob));
+        setExportStatus('ready');
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setExportStatus('error');
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [status, photo, name, locale]);
+
+  useEffect(() => {
+    return () => {
+      if (exportUrl) URL.revokeObjectURL(exportUrl);
+    };
+  }, [exportUrl]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -73,6 +110,8 @@ export default function CheckinPage() {
     }
   };
 
+  const downloadFileName = `checkin-${name.trim().replace(/\s+/g, '-') || 'sun'}.png`;
+
   if (step === 'language') {
     return <CheckinLanguagePicker onSelect={handleLanguageSelect} />;
   }
@@ -80,7 +119,7 @@ export default function CheckinPage() {
   if (status === 'success') {
     return (
       <main className="checkin-page flex min-h-screen items-center justify-center p-6">
-        <div className="flex max-w-md flex-col items-center gap-6 p-10 text-center">
+        <div className="checkin-success flex w-full max-w-sm flex-col items-center gap-5 p-6 text-center">
           <div className="checkin-success-icon flex h-20 w-20 items-center justify-center rounded-full text-4xl text-white">
             ✓
           </div>
@@ -88,6 +127,32 @@ export default function CheckinPage() {
             {t('checkin.successTitle')}
           </h1>
           <p className="text-[#6b4a2e]">{t('checkin.successBody')}</p>
+
+          {exportStatus === 'loading' && (
+            <p className="checkin-export-status">{t('checkin.exportGenerating')}</p>
+          )}
+
+          {exportStatus === 'error' && (
+            <p className="checkin-export-error">{t('checkin.exportError')}</p>
+          )}
+
+          {exportStatus === 'ready' && exportUrl && (
+            <div className="checkin-export flex w-full flex-col items-center gap-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={exportUrl}
+                alt=""
+                className="checkin-export-preview w-full rounded-2xl shadow-lg"
+              />
+              <a
+                href={exportUrl}
+                download={downloadFileName}
+                className="checkin-btn-primary checkin-export-download w-full rounded-xl py-4 text-lg font-semibold no-underline"
+              >
+                {t('checkin.exportDownload')}
+              </a>
+            </div>
+          )}
         </div>
       </main>
     );

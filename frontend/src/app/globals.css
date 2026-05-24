@@ -971,6 +971,30 @@ body {
   background: linear-gradient(135deg, #ffa724 0%, #d93b16 100%);
 }
 
+.checkin-export-preview {
+  display: block;
+  border: 1px solid rgba(255, 167, 36, 0.35);
+}
+
+.checkin-export-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.checkin-export-status {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #6b4a2e;
+}
+
+.checkin-export-error {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #dc2626;
+}
+
 .checkin-lang-options {
   display: flex;
   width: 100%;
