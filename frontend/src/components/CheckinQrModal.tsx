@@ -16,6 +16,7 @@ interface CheckinQrModalProps {
 export function CheckinQrModal({ open, onClose }: CheckinQrModalProps) {
   const { t } = useLanguage();
   const onCloseRef = useRef(onClose);
+  const dismissingRef = useRef(false);
   const [mounted, setMounted] = useState(false);
   const [active, setActive] = useState(false);
   const [closing, setClosing] = useState(false);
@@ -25,9 +26,12 @@ export function CheckinQrModal({ open, onClose }: CheckinQrModalProps) {
   }, [onClose]);
 
   const dismiss = useCallback(() => {
+    if (dismissingRef.current) return;
+    dismissingRef.current = true;
     setClosing(true);
     setActive(false);
     window.setTimeout(() => {
+      dismissingRef.current = false;
       setMounted(false);
       setClosing(false);
       onCloseRef.current();
@@ -35,8 +39,19 @@ export function CheckinQrModal({ open, onClose }: CheckinQrModalProps) {
   }, []);
 
   useEffect(() => {
+    if (!open && mounted) {
+      dismissingRef.current = true;
+      setActive(false);
+      setMounted(false);
+      setClosing(false);
+      dismissingRef.current = false;
+    }
+  }, [open, mounted]);
+
+  useEffect(() => {
     if (!open) return;
 
+    dismissingRef.current = false;
     setMounted(true);
     setClosing(false);
 

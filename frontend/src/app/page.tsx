@@ -147,6 +147,7 @@ export default function DisplayPage() {
       clearRotateTimer();
       setRotationEnabled(false);
       setScreenMode('bright');
+      setQrModalOpen(false);
       queueRef.current.push(item);
       processQueue();
     },

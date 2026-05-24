@@ -16,6 +16,9 @@ type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 type CheckinStep = 'language' | 'form';
 type ExportStatus = 'idle' | 'loading' | 'ready' | 'error';
 
+const NAME_MAX_LENGTH = 30;
+const MESSAGE_MAX_LENGTH = 500;
+
 export default function CheckinPage() {
   const { t, locale, setLocale } = useLanguage();
   const [step, setStep] = useState<CheckinStep>('language');
@@ -249,6 +252,7 @@ export default function CheckinPage() {
             onChange={(e) => setName(e.target.value)}
             placeholder={t('checkin.namePlaceholder')}
             className="checkin-input w-full rounded-xl border px-4 py-3 outline-none"
+            maxLength={NAME_MAX_LENGTH}
             required
           />
         </div>
@@ -263,6 +267,7 @@ export default function CheckinPage() {
             placeholder={t('checkin.messagePlaceholder')}
             rows={3}
             className="checkin-input w-full resize-none rounded-xl border px-4 py-3 outline-none"
+            maxLength={MESSAGE_MAX_LENGTH}
             required
           />
         </div>
