@@ -21,12 +21,12 @@ const googleSans = Google_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Plug in to evolution',
-  description: 'Plug in to evolution',
+  title: 'We are made of sun',
+  description: 'We are made of sun',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Plug in to evolution',
+    title: 'We are made of sun',
   },
   other: {
     'mobile-web-app-capable': 'yes',

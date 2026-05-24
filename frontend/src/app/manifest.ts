@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Plug in to evolution',
-    short_name: 'Plug in',
-    description: 'Sun check-in event display',
+    name: 'We are made of sun',
+    short_name: 'We are made of sun',
+    description: 'We are made of sun',
     start_url: '/',
     display: 'fullscreen',
     background_color: '#f8fbea',
