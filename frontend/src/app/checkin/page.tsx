@@ -118,15 +118,25 @@ export default function CheckinPage() {
 
   if (status === 'success') {
     return (
-      <main className="checkin-page flex min-h-screen items-center justify-center p-6">
+      <main className="checkin-page checkin-page--dark flex min-h-screen items-center justify-center p-6">
+        <div className="checkin-page-bg" aria-hidden="true">
+          <Image
+            src="/background_dark.png"
+            alt=""
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+
         <div className="checkin-success flex w-full max-w-sm flex-col items-center gap-5 p-6 text-center">
-          <div className="checkin-success-icon flex h-20 w-20 items-center justify-center rounded-full text-4xl text-white">
+          {/* <div className="checkin-success-icon flex h-20 w-20 items-center justify-center rounded-full text-4xl text-white">
             ✓
-          </div>
-          <h1 className="text-2xl font-bold text-[#3f1700]">
+          </div> */}
+          <h1 className="checkin-success-title text-2xl font-bold">
             {t('checkin.successTitle')}
           </h1>
-          <p className="text-[#6b4a2e]">{t('checkin.successBody')}</p>
+          <p className="checkin-success-body">{t('checkin.successBody')}</p>
 
           {exportStatus === 'loading' && (
             <p className="checkin-export-status">{t('checkin.exportGenerating')}</p>
@@ -137,20 +147,34 @@ export default function CheckinPage() {
           )}
 
           {exportStatus === 'ready' && exportUrl && (
-            <div className="checkin-export flex w-full flex-col items-center gap-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={exportUrl}
-                alt=""
-                className="checkin-export-preview w-full rounded-2xl shadow-lg"
-              />
-              <a
-                href={exportUrl}
-                download={downloadFileName}
-                className="checkin-btn-primary checkin-export-download w-full rounded-xl py-4 text-lg font-semibold no-underline"
-              >
-                {t('checkin.exportDownload')}
-              </a>
+            <div className="checkin-export w-full">
+              <div className="checkin-export-card">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={exportUrl}
+                  alt=""
+                  className="checkin-export-preview w-full rounded-2xl shadow-lg"
+                />
+              </div>
+              <div className="checkin-export-download-wrap">
+                <a
+                  href={exportUrl}
+                  download={downloadFileName}
+                  className="checkin-export-download-btn"
+                  aria-label={t('checkin.exportDownload')}
+                  title={t('checkin.exportDownload')}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M8 1.5a.75.75 0 0 1 .75.75v5.69l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V2.25A.75.75 0 0 1 8 1.5z" />
+                    <path d="M3 11.75a.75.75 0 0 0 0 1.5h10a.75.75 0 0 0 0-1.5H3z" />
+                  </svg>
+                </a>
+              </div>
             </div>
           )}
         </div>
@@ -159,26 +183,28 @@ export default function CheckinPage() {
   }
 
   return (
-    <main className="checkin-page flex min-h-screen items-center justify-center p-4">
+    <main className="checkin-page checkin-page--dark checkin-page--form flex min-h-screen p-4">
+      <div className="checkin-page-bg" aria-hidden="true">
+        <Image
+          src="/background_dark.png"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
+
       <form
         onSubmit={handleSubmit}
-        className="checkin-form flex w-full max-w-md flex-col gap-5 p-6 md:p-8"
+        className="checkin-form flex w-full max-w-md flex-col gap-5 p-4 md:p-8"
       >
         <div className="checkin-header">
           <Image
-            src="/sun.svg"
-            alt=""
-            width={160}
-            height={110}
+            src="/we_are_made_of_sun_mobile.png"
+            alt="We are made of sun"
+            width={980}
+            height={875}
             className="checkin-sun-img"
-            priority
-          />
-          <Image
-            src="/plug_in_evolution.svg"
-            alt="Plug in to evolution"
-            width={320}
-            height={38}
-            className="checkin-plug-logo"
             priority
           />
         </div>

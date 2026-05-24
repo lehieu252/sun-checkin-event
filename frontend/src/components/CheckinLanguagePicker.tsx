@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/context";
+import { translate } from "@/lib/i18n/translations";
 import { LOCALE_LABELS, LOCALES, type Locale } from "@/lib/i18n/types";
 
 interface CheckinLanguagePickerProps {
@@ -12,10 +14,19 @@ export function CheckinLanguagePicker({
   onSelect,
 }: CheckinLanguagePickerProps) {
   const { t } = useLanguage();
+  const [sloganLocale, setSloganLocale] = useState<Locale>("vi");
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSloganLocale((prev) => (prev === "vi" ? "en" : "vi"));
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <main className="checkin-page checkin-page--lang-picker flex min-h-screen items-center justify-center p-4">
-      <div className="checkin-lang-picker-bg" aria-hidden="true">
+    <main className="checkin-page checkin-page--lang-picker checkin-page--dark flex min-h-screen items-center justify-center p-4">
+      <div className="checkin-page-bg" aria-hidden="true">
         <Image
           src="/background_dark.png"
           alt=""
@@ -35,7 +46,9 @@ export function CheckinLanguagePicker({
           priority
         />
 
-        <p className="checkin-lang-slogan">{t("display.darkPlugInSlogan")}</p>
+        <p className="checkin-lang-slogan">
+          {translate(sloganLocale, "display.darkPlugInSlogan")}
+        </p>
 
         <div>
           <div className="checkin-lang-options">

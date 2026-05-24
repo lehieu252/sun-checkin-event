@@ -883,21 +883,56 @@ body {
   font-family: var(--font-google-sans), var(--font-geist-sans), sans-serif;
 }
 
-.checkin-page--lang-picker {
+.checkin-page--lang-picker,
+.checkin-page--dark {
   position: relative;
   color: #fff;
   background: #000;
 }
 
+.checkin-page-bg,
 .checkin-lang-picker-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
 }
 
+.checkin-page--dark .checkin-form,
+.checkin-page--dark .checkin-success,
 .checkin-page--lang-picker .checkin-lang-picker {
   position: relative;
   z-index: 1;
+}
+
+.checkin-page--dark .checkin-form {
+  background: transparent;
+}
+
+.checkin-page--dark .checkin-label {
+  color: #fff;
+}
+
+.checkin-success-title {
+  color: #fff;
+}
+
+.checkin-success-body {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.checkin-page--dark .checkin-export-status {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.checkin-page--form {
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+  padding-bottom: 24px;
+}
+
+.checkin-page--form .checkin-form {
+  padding-top: 0;
 }
 
 .checkin-lang-sun-img {
@@ -934,12 +969,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  margin-bottom: 4px;
 }
 
 .checkin-sun-img {
-  width: auto;
-  height: clamp(100px, 28vw, 140px);
+  width: min(100%, 250px);
+  height: auto;
+  margin-left: 32px;
 }
 
 .checkin-plug-logo {
@@ -1014,16 +1050,56 @@ body {
   background: linear-gradient(135deg, #ffa724 0%, #d93b16 100%);
 }
 
+.checkin-export {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.checkin-export-card {
+  position: relative;
+  width: 100%;
+}
+
 .checkin-export-preview {
   display: block;
   border: 1px solid rgba(255, 167, 36, 0.35);
 }
 
-.checkin-export-download {
-  display: inline-flex;
+.checkin-export-download-wrap {
+  margin-top: 16px;
+  width: 40px;
+  height: 40px;
+}
+
+.checkin-export-download-btn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  text-decoration: none;
+  opacity: 1;
+  border-radius: 12px;
+  border: none;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.checkin-export-download-wrap:hover .checkin-export-download-btn,
+.checkin-export-download-btn:focus-visible {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.88);
+  color: #ffa724;
+}
+
+.checkin-export-download-btn svg {
+  width: 20px;
+  height: 20px;
 }
 
 .checkin-export-status {
