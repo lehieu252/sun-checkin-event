@@ -456,6 +456,19 @@ body {
 
 /* ─── Thank you screen ─────────────────────── */
 
+.thank-you-screen {
+  animation: thankYouScreenBrightness 3s ease forwards;
+}
+
+@keyframes thankYouScreenBrightness {
+  from {
+    filter: brightness(0.05);
+  }
+  to {
+    filter: brightness(1.3);
+  }
+}
+
 .thank-you-screen-bg-wrap {
   position: absolute;
   inset: 0;
