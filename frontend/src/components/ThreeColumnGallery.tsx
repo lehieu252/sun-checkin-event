@@ -28,7 +28,8 @@ interface ThreeColumnGalleryProps {
 
 function splitIntoColumns(items: NewCheckinPayload[]) {
   const cols: NewCheckinPayload[][] = [[], [], []];
-  items.forEach((item, i) => cols[i % 3].push(item));
+  const columnOrder = [1, 2, 0] as const;
+  items.forEach((item, i) => cols[columnOrder[i % 3]].push(item));
   return cols;
 }
 
