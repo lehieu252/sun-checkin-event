@@ -118,7 +118,7 @@ export default function CheckinPage() {
 
   if (status === 'success') {
     return (
-      <main className="checkin-page checkin-page--dark flex min-h-screen items-center justify-center p-6">
+      <main className="checkin-page checkin-page--dark flex min-h-screen justify-center p-6">
         <div className="checkin-page-bg" aria-hidden="true">
           <Image
             src="/background_dark.png"
@@ -129,7 +129,7 @@ export default function CheckinPage() {
           />
         </div>
 
-        <div className="checkin-success flex w-full max-w-sm flex-col items-center gap-5 p-6 text-center">
+        <div className="checkin-success flex w-full max-w-sm flex-col gap-5 p-6 text-center">
           {/* <div className="checkin-success-icon flex h-20 w-20 items-center justify-center rounded-full text-4xl text-white">
             ✓
           </div> */}
