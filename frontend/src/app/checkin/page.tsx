@@ -183,7 +183,7 @@ export default function CheckinPage() {
   }
 
   return (
-    <main className="checkin-page checkin-page--dark checkin-page--form">
+    <main className="checkin-page checkin-page--dark checkin-page--form flex min-h-screen p-4">
       <div className="checkin-page-bg" aria-hidden="true">
         <Image
           src="/background_dark.png"
@@ -194,7 +194,10 @@ export default function CheckinPage() {
         />
       </div>
 
-      <form onSubmit={handleSubmit} className="checkin-form">
+      <form
+        onSubmit={handleSubmit}
+        className="checkin-form flex w-full max-w-md flex-col gap-5 p-4 md:p-8"
+      >
         <div className="checkin-header">
           <Image
             src="/we_are_made_of_sun_mobile.png"
@@ -207,7 +210,7 @@ export default function CheckinPage() {
         </div>
 
         <div>
-          <label className="checkin-label checkin-field-label">
+          <label className="checkin-label mb-1 block text-sm font-medium">
             {t('checkin.nameLabel')}
           </label>
           <input
@@ -221,21 +224,21 @@ export default function CheckinPage() {
         </div>
 
         <div>
-          <label className="checkin-label checkin-field-label">
+          <label className="checkin-label mb-1 block text-sm font-medium">
             {t('checkin.messageLabel')}
           </label>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder={t('checkin.messagePlaceholder')}
-            rows={2}
+            rows={3}
             className="checkin-input w-full resize-none rounded-xl border px-4 py-3 outline-none"
             required
           />
         </div>
 
         <div>
-          <label className="checkin-label checkin-field-label">
+          <label className="checkin-label mb-1 block text-sm font-medium">
             {t('checkin.photoLabel')}
           </label>
 
@@ -249,8 +252,8 @@ export default function CheckinPage() {
           />
 
           {preview ? (
-            <div className="checkin-photo-preview flex flex-col items-center gap-3">
-              <div className="checkin-photo-ring overflow-hidden rounded-full border-4 shadow-md">
+            <div className="flex flex-col items-center gap-3">
+              <div className="checkin-photo-ring h-36 w-36 overflow-hidden rounded-full border-4 shadow-md">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={preview}
