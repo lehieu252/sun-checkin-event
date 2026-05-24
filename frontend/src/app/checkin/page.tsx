@@ -5,6 +5,10 @@ import { FormEvent, useEffect, useState } from 'react';
 import { CheckinLanguagePicker } from '@/components/CheckinLanguagePicker';
 import { API_URL } from '@/lib/config';
 import { generateCheckinExportImage } from '@/lib/generateCheckinExportImage';
+import {
+  isMobileExportDevice,
+  saveCheckinExportImage,
+} from '@/lib/saveCheckinExportImage';
 import { useLanguage } from '@/lib/i18n/context';
 import type { Locale } from '@/lib/i18n/types';
 
@@ -24,6 +28,8 @@ export default function CheckinPage() {
   const [inputKey, setInputKey] = useState(0);
   const [exportStatus, setExportStatus] = useState<ExportStatus>('idle');
   const [exportUrl, setExportUrl] = useState<string | null>(null);
+  const [exportBlob, setExportBlob] = useState<Blob | null>(null);
+  const [exportUsesShare, setExportUsesShare] = useState(false);
 
   const handleLanguageSelect = (selectedLocale: Locale) => {
     setLocale(selectedLocale);
@@ -45,6 +51,7 @@ export default function CheckinPage() {
     let cancelled = false;
     setExportStatus('loading');
     setExportUrl(null);
+    setExportBlob(null);
 
     generateCheckinExportImage({
       photo,
@@ -53,6 +60,7 @@ export default function CheckinPage() {
     })
       .then((blob) => {
         if (cancelled) return;
+        setExportBlob(blob);
         setExportUrl(URL.createObjectURL(blob));
         setExportStatus('ready');
       })
@@ -67,10 +75,24 @@ export default function CheckinPage() {
   }, [status, photo, name, locale]);
 
   useEffect(() => {
+    setExportUsesShare(isMobileExportDevice());
+  }, []);
+
+  useEffect(() => {
     return () => {
       if (exportUrl) URL.revokeObjectURL(exportUrl);
     };
   }, [exportUrl]);
+
+  const handleExportSave = async () => {
+    if (!exportBlob) return;
+
+    try {
+      await saveCheckinExportImage(exportBlob, downloadFileName);
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return;
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -157,12 +179,20 @@ export default function CheckinPage() {
                 />
               </div>
               <div className="checkin-export-download-wrap">
-                <a
-                  href={exportUrl}
-                  download={downloadFileName}
+                <button
+                  type="button"
+                  onClick={handleExportSave}
                   className="checkin-export-download-btn"
-                  aria-label={t('checkin.exportDownload')}
-                  title={t('checkin.exportDownload')}
+                  aria-label={
+                    exportUsesShare
+                      ? t('checkin.exportShare')
+                      : t('checkin.exportDownload')
+                  }
+                  title={
+                    exportUsesShare
+                      ? t('checkin.exportShare')
+                      : t('checkin.exportDownload')
+                  }
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +203,7 @@ export default function CheckinPage() {
                     <path d="M8 1.5a.75.75 0 0 1 .75.75v5.69l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V2.25A.75.75 0 0 1 8 1.5z" />
                     <path d="M3 11.75a.75.75 0 0 0 0 1.5h10a.75.75 0 0 0 0-1.5H3z" />
                   </svg>
-                </a>
+                </button>
               </div>
             </div>
           )}
