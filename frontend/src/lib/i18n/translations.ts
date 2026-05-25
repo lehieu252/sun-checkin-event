@@ -24,9 +24,19 @@ const vi = {
       'Mặt Trời là nơi sự sống bắt đầu - nguồn năng lượng tạo nên thế giới hữu hình và nuôi dưỡng mọi chuyển động của tương lai.',
     darkRightParagraph2:
       'Sự hiện diện của bạn tại đây là một đơn vị ánh sáng được thêm vào hành trình ấy, để những kết nối nhỏ cùng tạo nên thay đổi bền vững.',
+    darkHeadline1: 'Mặt Trời là khởi nguồn của sự sống.',
+    darkHeadline2:
+      'Nhưng điều gì giúp Mặt Trời duy trì được năng lượng bền vững?',
+    darkBody3Part1:
+      'Đó chính là khi ngày càng nhiều nguồn sáng cùng hội tụ và tiếp tục lan tỏa năng lượng về phía trước.\n\nMỗi lượt check-in của bạn sẽ góp thêm ',
+    darkBodyHighlight: '100 đơn vị',
+    darkBody3Part2:
+      ' ánh sáng, giúp hành trình của Mặt Trời tiếp tục được mở rộng, nuôi dưỡng sự sống, tri thức và những chuyển động hướng tới một tương lai bền vững.',
+    darkCta: 'Khám phá cách tiếp thêm năng lượng cho Mặt Trời ☀️',
     slideCheckIn: 'Check in ngay',
+    slideReady: 'BẠN CÓ SẴN SÀNG ?',
     darkCounterLabel: 'Đơn vị ánh sáng đã được đóng góp',
-    darkPlugInSlogan: 'NHẤN KẾT NỐI BẬT THAY ĐỔI',
+    darkPlugInSlogan: 'NHẤN KẾT NỐI - BẬT THAY ĐỔI',
   },
   checkin: {
     langTitle: 'Chọn ngôn ngữ',
@@ -77,7 +87,16 @@ const en = {
       'The Sun is where life begins a source of energy that shapes the visible world and powers the future.',
     darkRightParagraph2:
       'Your presence here becomes a unit of light added to that journey, where small connections come together to create sustainable change.',
+    darkHeadline1: 'The Sun is the source of life.',
+    darkHeadline2: 'But what keeps its energy alive and enduring?',
+    darkBody3Part1:
+      "It's when more and more sources of light come together - spreading energy forward.\n\nEvery check-in adds ",
+    darkBodyHighlight: '100 units',
+    darkBody3Part2:
+      ' of light, helping the Sun\u2019s journey continue to grow - nurturing life, knowledge, and movements toward a more sustainable future.',
+    darkCta: 'Discover how you can empower the Sun ☀️',
     slideCheckIn: 'Check in now',
+    slideReady: 'ARE YOU READY ?',
     darkCounterLabel: 'Units of light contributed',
     darkPlugInSlogan: 'PLUG IN TO EVOLUTION',
   },
@@ -125,7 +144,14 @@ export type TranslationTree = {
     exitFullscreen: string;
     darkRightParagraph1: string;
     darkRightParagraph2: string;
+    darkHeadline1: string;
+    darkHeadline2: string;
+    darkBody3Part1: string;
+    darkBodyHighlight: string;
+    darkBody3Part2: string;
+    darkCta: string;
     slideCheckIn: string;
+    slideReady: string;
     darkCounterLabel: string;
     darkPlugInSlogan: string;
   };

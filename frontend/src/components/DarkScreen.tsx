@@ -2,22 +2,19 @@
 
 import Image from 'next/image';
 import { RefObject } from 'react';
-import { DarkOdometerCounter } from '@/components/DarkOdometerCounter';
 import { SlideToCheckIn } from '@/components/SlideToCheckIn';
 import { useLanguage } from '@/lib/i18n/context';
 
 interface DarkScreenProps {
-  count: number;
   brightness: number;
   placeholderRef: RefObject<HTMLDivElement | null>;
-  onQrOpen: () => void;
+  onSlideComplete: () => void;
 }
 
 export function DarkScreen({
-  count,
   brightness,
   placeholderRef,
-  onQrOpen,
+  onSlideComplete,
 }: DarkScreenProps) {
   const { t } = useLanguage();
 
@@ -55,36 +52,44 @@ export function DarkScreen({
         />
       </div>
 
-      <div className="dark-screen-slogan-left">
-        <Image
-          src="/we_are_made_of_sun.svg"
-          alt="We are made of sun"
-          width={745}
-          height={799}
-          className="dark-slogan-img dark-slogan-img--left"
-          priority
-        />
-        <p className="dark-plug-in-slogan">{t('display.darkPlugInSlogan')}</p>
+      <div className="dark-screen-left">
+        <div className="dark-screen-headline-block">
+          <p className="dark-screen-headline">{t('display.darkHeadline1')}</p>
+          <p className="dark-screen-headline">{t('display.darkHeadline2')}</p>
+        </div>
+
+        <p className="dark-screen-body">
+          {t('display.darkBody3Part1')}
+          <span className="dark-screen-body-highlight">
+            {t('display.darkBodyHighlight')}
+          </span>
+          {t('display.darkBody3Part2')}
+        </p>
+
+        <p className="dark-screen-cta">{t('display.darkCta')}</p>
+
+        <div className="dark-screen-slide-wrap">
+          <SlideToCheckIn
+            label={t('display.slideReady')}
+            onComplete={onSlideComplete}
+          />
+        </div>
       </div>
 
       <div className="dark-screen-sun-area">
         <div ref={placeholderRef} className="dark-sun-placeholder" />
       </div>
 
-      <div className="dark-screen-right-column">
-        <div className="dark-screen-slogan dark-screen-slogan--right">
-          <p className="dark-slogan-text">{t('display.darkRightParagraph1')}</p>
-          <p className="dark-slogan-text">{t('display.darkRightParagraph2')}</p>
-        </div>
-        <SlideToCheckIn onComplete={onQrOpen} />
-      </div>
+      <Image
+        src="/we_are_made_of_sun_white.svg"
+        alt="We are made of sun"
+        width={727}
+        height={143}
+        className="dark-screen-sun-white-img"
+        priority
+      />
 
-      <div className="dark-screen-footer">
-        <DarkOdometerCounter count={count} digits={4} />
-        <div className="dark-odometer-label">
-          {t('display.darkCounterLabel')}
-        </div>
-      </div>
+      <p className="dark-screen-plug-slogan">{t('display.darkPlugInSlogan')}</p>
     </div>
   );
 }

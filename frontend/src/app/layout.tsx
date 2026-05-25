@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono, Google_Sans } from 'next/font/google';
+import { Barlow, Geist, Geist_Mono, Google_Sans } from 'next/font/google';
 import { Providers } from '@/components/Providers';
 import { localFontVariables } from '@/lib/fonts';
 import './globals.css';
@@ -18,6 +18,12 @@ const googleSans = Google_Sans({
   variable: '--font-google-sans',
   subsets: ['latin'],
   weight: ['400', '700'],
+});
+
+const barlow = Barlow({
+  variable: '--font-barlow',
+  subsets: ['latin', 'vietnamese'],
+  weight: ['800'],
 });
 
 export const metadata: Metadata = {
@@ -48,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
-      className={`${geistSans.variable} ${geistMono.variable} ${googleSans.variable} ${localFontVariables} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${googleSans.variable} ${barlow.variable} ${localFontVariables} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>

@@ -247,10 +247,12 @@ export default function DisplayPage() {
         className={`screen-layer screen-layer--dark${showDarkLayer ? ' screen-layer--active' : ''}`}
       >
         <DarkScreen
-          count={count}
           brightness={darkBrightness}
           placeholderRef={darkPlaceholderRef}
-          onQrOpen={() => setQrModalOpen(true)}
+          onSlideComplete={() => {
+            clearRotateTimer();
+            setScreenMode('bright');
+          }}
         />
 
         {darkSunPos && showDarkLayer && (

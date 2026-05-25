@@ -22,11 +22,13 @@ const RESET_DELAY_MS = 450;
 interface SlideToCheckInProps {
   onComplete?: () => void;
   variant?: keyof typeof SIZES;
+  label?: string;
 }
 
 export function SlideToCheckIn({
   onComplete,
   variant = 'default',
+  label,
 }: SlideToCheckInProps) {
   const { trackWidth, handleWidth, trackPadding } = SIZES[variant];
   const maxOffset = trackWidth - handleWidth - trackPadding * 2;
@@ -119,7 +121,7 @@ export function SlideToCheckIn({
           finishDrag(e.pointerId, e.currentTarget);
         }}
       >
-        {t('display.slideCheckIn')}
+        {label ?? t('display.slideCheckIn')}
       </div>
     </div>
   );

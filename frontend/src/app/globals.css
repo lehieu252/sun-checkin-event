@@ -1509,6 +1509,100 @@ body {
   margin-top: 250px;
 }
 
+.dark-screen-left {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.dark-screen-headline-block {
+  position: absolute;
+  top: 450px;
+  left: 195px;
+  width: 2300px;
+}
+
+.dark-screen-headline {
+  margin: 0;
+  font-family: var(--font-barlow), sans-serif;
+  font-size: 140px;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+}
+
+.dark-screen-headline + .dark-screen-headline {
+  margin-top: 60px;
+}
+
+.dark-screen-body {
+  position: absolute;
+  top: 1080px;
+  left: 195px;
+  width: 1956px;
+  margin: 0;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 54px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+  white-space: pre-line;
+}
+
+.dark-screen-body-highlight {
+  font-size: 80px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.dark-screen-cta {
+  position: absolute;
+  top: 1680px;
+  left: 195px;
+  margin: 0;
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #fff;
+}
+
+.dark-screen-slide-wrap {
+  position: absolute;
+  top: 1760px;
+  left: 195px;
+  pointer-events: auto;
+}
+
+.dark-screen-sun-white-img {
+  position: absolute;
+  top: 1609px;
+  right: 474px;
+  z-index: 10;
+  width: 727px;
+  height: 143px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.dark-screen-plug-slogan {
+  position: absolute;
+  top: 1800px;
+  left: calc(100% - 474px - 727px / 2);
+  z-index: 10;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
+  font-size: 52px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 .dark-screen-slogan-left {
   position: absolute;
   top: 680px;
@@ -1661,20 +1755,31 @@ body {
 .dark-screen-sun-area {
   position: absolute;
   top: 320px;
-  left: 50%;
+  left: 2250px;
   z-index: 5;
-  transform: translateX(-50%);
+  width: 1578.5px;
+  height: 1280px;
+  transform: none;
 }
 
 .dark-sun-placeholder {
   width: 1578.5px;
   height: 1280px;
+  flex-shrink: 0;
+}
+
+.dark-sun-fixed .sun-inner {
+  width: 1578.5px;
+  height: 1280px;
+  flex-shrink: 0;
 }
 
 .dark-sun-svg {
   display: block;
   width: 1578.5px;
   height: 1280px;
+  max-width: none;
+  flex-shrink: 0;
   object-fit: contain;
   background: transparent;
 }

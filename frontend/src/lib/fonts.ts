@@ -23,13 +23,6 @@ export const gilroy = localFont({
   display: 'swap',
 });
 
-export const barlow = localFont({
-  src: '../fonts/Barlow-Regular.ttf',
-  weight: '400',
-  variable: '--font-barlow',
-  display: 'swap',
-});
-
 export const seona = localFont({
   src: '../fonts/Seona-DEMO.otf',
   weight: '400',
@@ -54,7 +47,6 @@ export const arialBold = localFont({
 /** All local font CSS variables for layout.tsx */
 export const localFontVariables = [
   gilroy.variable,
-  barlow.variable,
   seona.variable,
   artnik.variable,
   arialBold.variable,
