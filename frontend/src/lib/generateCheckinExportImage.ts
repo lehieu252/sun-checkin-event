@@ -1,24 +1,28 @@
-import { translate } from '@/lib/i18n/translations';
 import type { Locale } from '@/lib/i18n/types';
 
-const EXPORT_WIDTH = 1440;
-const EXPORT_HEIGHT = 1920;
-const PHOTO_SIZE = 717;
-const PHOTO_TOP = 366;
-const HEADLINE_MARGIN_TOP = 72;
-const HEADLINE_FONT_SIZE = 63;
-const HEADLINE_MARGIN_X = 320;
-const HEADLINE_LINE_HEIGHT = 1.25;
-const TEXT_MARGIN_TOP = 328;
-const TEXT_FONT_SIZE = 38;
-const TEXT_MARGIN_X = 318;
-const TEXT_LINE_HEIGHT = 1.45;
+const EXPORT_WIDTH = 1080;
+const EXPORT_HEIGHT = 1919;
+const PHOTO_WIDTH = 528;
+const PHOTO_HEIGHT = 940;
+const PHOTO_LEFT = 0;
+const PHOTO_TOP = 567;
+const NAME_FONT_SIZE = 42;
+const NAME_MARGIN_LEFT = 606;
+const NAME_MARGIN_RIGHT = 32;
+/** Vertical center of the name slot — text block grows evenly for 1 or 2 lines. */
+const NAME_CENTER_Y = 888;
+const NAME_LINE_HEIGHT = 1.35;
 
-const TEMPLATE_URL = '/export_image_template.png';
-const FONT_MEDIUM_URL = '/fonts/SVN-Gilroy-Medium.otf';
+const TEMPLATE_VI_URL = '/template_vi.png';
+const TEMPLATE_EN_URL = '/template_vi.png';
+const OVERLAY_URL = '/template_2.png';
 const FONT_SEMIBOLD_URL = '/fonts/SVN-Gilroy-SemiBold.otf';
 
 let fontsReady: Promise<void> | null = null;
+
+function getTemplateUrl(locale: Locale): string {
+  return locale === 'en' ? TEMPLATE_EN_URL : TEMPLATE_VI_URL;
+}
 
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -49,15 +53,9 @@ async function ensureFontsLoaded(): Promise<void> {
   if (fontsReady) return fontsReady;
 
   fontsReady = (async () => {
-    const [medium, semibold] = await Promise.all([
-      new FontFace('GilroyExport', `url(${FONT_MEDIUM_URL})`, {
-        weight: '500',
-      }).load(),
-      new FontFace('GilroyExport', `url(${FONT_SEMIBOLD_URL})`, {
-        weight: '600',
-      }).load(),
-    ]);
-    document.fonts.add(medium);
+    const semibold = await new FontFace('GilroyExport', `url(${FONT_SEMIBOLD_URL})`, {
+      weight: '600',
+    }).load();
     document.fonts.add(semibold);
     await document.fonts.ready;
   })();
@@ -96,45 +94,27 @@ function wrapText(
   return lines;
 }
 
-function drawWrappedText(
-  ctx: CanvasRenderingContext2D,
-  lines: string[],
-  x: number,
-  y: number,
-  maxWidth: number,
-  lineHeight: number,
-): number {
-  let cursorY = y;
-
-  for (const line of lines) {
-    ctx.fillText(line, x + maxWidth / 2, cursorY);
-    cursorY += lineHeight;
-  }
-
-  return cursorY;
-}
-
-function drawCirclePhoto(
+function drawCoverPhoto(
   ctx: CanvasRenderingContext2D,
   img: CanvasImageSource,
   x: number,
   y: number,
-  size: number,
+  width: number,
+  height: number,
 ): void {
   const { width: imgWidth, height: imgHeight } = getSourceSize(img);
   if (!imgWidth || !imgHeight) return;
 
   ctx.save();
   ctx.beginPath();
-  ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
-  ctx.closePath();
+  ctx.rect(x, y, width, height);
   ctx.clip();
 
-  const scale = Math.max(size / imgWidth, size / imgHeight);
+  const scale = Math.max(width / imgWidth, height / imgHeight);
   const drawWidth = imgWidth * scale;
   const drawHeight = imgHeight * scale;
-  const drawX = x + (size - drawWidth) / 2;
-  const drawY = y + (size - drawHeight) / 2;
+  const drawX = x + (width - drawWidth) / 2;
+  const drawY = y + (height - drawHeight) / 2;
 
   ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
   ctx.restore();
@@ -153,8 +133,9 @@ export async function generateCheckinExportImage({
 }: GenerateCheckinExportImageOptions): Promise<Blob> {
   await ensureFontsLoaded();
 
-  const [template, userPhoto] = await Promise.all([
-    loadImage(TEMPLATE_URL),
+  const [background, overlay, userPhoto] = await Promise.all([
+    loadImage(getTemplateUrl(locale)),
+    loadImage(OVERLAY_URL),
     loadPhotoFromFile(photo),
   ]);
 
@@ -167,56 +148,26 @@ export async function generateCheckinExportImage({
     throw new Error('Canvas is not supported');
   }
 
-  ctx.drawImage(template, 0, 0, EXPORT_WIDTH, EXPORT_HEIGHT);
-
-  const photoX = (EXPORT_WIDTH - PHOTO_SIZE) / 2;
-  drawCirclePhoto(ctx, userPhoto, photoX, PHOTO_TOP, PHOTO_SIZE);
+  ctx.drawImage(background, 0, 0, EXPORT_WIDTH, EXPORT_HEIGHT);
+  drawCoverPhoto(ctx, userPhoto, PHOTO_LEFT, PHOTO_TOP, PHOTO_WIDTH, PHOTO_HEIGHT);
   userPhoto.close?.();
+  ctx.drawImage(overlay, 0, 0, EXPORT_WIDTH, EXPORT_HEIGHT);
 
-  const photoBottom = PHOTO_TOP + PHOTO_SIZE;
-  const headlineMaxWidth = EXPORT_WIDTH - HEADLINE_MARGIN_X * 2;
-  const headline = translate(locale, 'display.thankYouHeadline');
-  const sunQuote = translate(locale, 'display.thankYouSunQuote');
-  const body = translate(locale, 'display.thankYouBody', { name });
-
+  const nameMaxWidth = EXPORT_WIDTH - NAME_MARGIN_LEFT - NAME_MARGIN_RIGHT;
   ctx.fillStyle = '#ffffff';
-  ctx.textAlign = 'center';
+  ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
-  ctx.font = `600 ${HEADLINE_FONT_SIZE}px GilroyExport, sans-serif`;
+  ctx.font = `600 ${NAME_FONT_SIZE}px GilroyExport, sans-serif`;
 
-  const headlineLineHeight = HEADLINE_FONT_SIZE * HEADLINE_LINE_HEIGHT;
-  const headlineLines = wrapText(ctx, headline, headlineMaxWidth);
-  let textY = drawWrappedText(
-    ctx,
-    headlineLines,
-    HEADLINE_MARGIN_X,
-    photoBottom + HEADLINE_MARGIN_TOP,
-    headlineMaxWidth,
-    headlineLineHeight,
-  );
+  const nameLines = wrapText(ctx, name.trim(), nameMaxWidth);
+  const lineHeight = NAME_FONT_SIZE * NAME_LINE_HEIGHT;
+  const blockHeight = nameLines.length * lineHeight;
+  let nameY = NAME_CENTER_Y - blockHeight / 2;
 
-  const quoteLines = wrapText(ctx, sunQuote, headlineMaxWidth);
-  textY = drawWrappedText(
-    ctx,
-    quoteLines,
-    HEADLINE_MARGIN_X,
-    textY,
-    headlineMaxWidth,
-    headlineLineHeight,
-  );
-
-  const textMaxWidth = EXPORT_WIDTH - TEXT_MARGIN_X * 2;
-  ctx.font = `500 ${TEXT_FONT_SIZE}px GilroyExport, sans-serif`;
-
-  const bodyLines = wrapText(ctx, body, textMaxWidth);
-  drawWrappedText(
-    ctx,
-    bodyLines,
-    TEXT_MARGIN_X,
-    Math.max(photoBottom + TEXT_MARGIN_TOP, textY + 40),
-    textMaxWidth,
-    TEXT_FONT_SIZE * TEXT_LINE_HEIGHT,
-  );
+  for (const line of nameLines) {
+    ctx.fillText(line, NAME_MARGIN_LEFT, nameY);
+    nameY += lineHeight;
+  }
 
   return new Promise((resolve, reject) => {
     canvas.toBlob(
