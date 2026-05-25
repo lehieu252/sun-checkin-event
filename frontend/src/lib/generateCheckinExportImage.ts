@@ -5,6 +5,10 @@ const EXPORT_WIDTH = 1440;
 const EXPORT_HEIGHT = 1920;
 const PHOTO_SIZE = 717;
 const PHOTO_TOP = 366;
+const HEADLINE_MARGIN_TOP = 72;
+const HEADLINE_FONT_SIZE = 63;
+const HEADLINE_MARGIN_X = 320;
+const HEADLINE_LINE_HEIGHT = 1.25;
 const TEXT_MARGIN_TOP = 328;
 const TEXT_FONT_SIZE = 38;
 const TEXT_MARGIN_X = 318;
@@ -12,6 +16,7 @@ const TEXT_LINE_HEIGHT = 1.45;
 
 const TEMPLATE_URL = '/export_image_template.png';
 const FONT_MEDIUM_URL = '/fonts/SVN-Gilroy-Medium.otf';
+const FONT_SEMIBOLD_URL = '/fonts/SVN-Gilroy-SemiBold.otf';
 
 let fontsReady: Promise<void> | null = null;
 
@@ -44,12 +49,16 @@ async function ensureFontsLoaded(): Promise<void> {
   if (fontsReady) return fontsReady;
 
   fontsReady = (async () => {
-    const face = await new FontFace(
-      'GilroyExport',
-      `url(${FONT_MEDIUM_URL})`,
-      { weight: '500' },
-    ).load();
-    document.fonts.add(face);
+    const [medium, semibold] = await Promise.all([
+      new FontFace('GilroyExport', `url(${FONT_MEDIUM_URL})`, {
+        weight: '500',
+      }).load(),
+      new FontFace('GilroyExport', `url(${FONT_SEMIBOLD_URL})`, {
+        weight: '600',
+      }).load(),
+    ]);
+    document.fonts.add(medium);
+    document.fonts.add(semibold);
     await document.fonts.ready;
   })();
 
@@ -164,13 +173,39 @@ export async function generateCheckinExportImage({
   drawCirclePhoto(ctx, userPhoto, photoX, PHOTO_TOP, PHOTO_SIZE);
   userPhoto.close?.();
 
-  const textMaxWidth = EXPORT_WIDTH - TEXT_MARGIN_X * 2;
   const photoBottom = PHOTO_TOP + PHOTO_SIZE;
+  const headlineMaxWidth = EXPORT_WIDTH - HEADLINE_MARGIN_X * 2;
+  const headline = translate(locale, 'display.thankYouHeadline');
+  const sunQuote = translate(locale, 'display.thankYouSunQuote');
   const body = translate(locale, 'display.thankYouBody', { name });
 
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
+  ctx.font = `600 ${HEADLINE_FONT_SIZE}px GilroyExport, sans-serif`;
+
+  const headlineLineHeight = HEADLINE_FONT_SIZE * HEADLINE_LINE_HEIGHT;
+  const headlineLines = wrapText(ctx, headline, headlineMaxWidth);
+  let textY = drawWrappedText(
+    ctx,
+    headlineLines,
+    HEADLINE_MARGIN_X,
+    photoBottom + HEADLINE_MARGIN_TOP,
+    headlineMaxWidth,
+    headlineLineHeight,
+  );
+
+  const quoteLines = wrapText(ctx, sunQuote, headlineMaxWidth);
+  textY = drawWrappedText(
+    ctx,
+    quoteLines,
+    HEADLINE_MARGIN_X,
+    textY,
+    headlineMaxWidth,
+    headlineLineHeight,
+  );
+
+  const textMaxWidth = EXPORT_WIDTH - TEXT_MARGIN_X * 2;
   ctx.font = `500 ${TEXT_FONT_SIZE}px GilroyExport, sans-serif`;
 
   const bodyLines = wrapText(ctx, body, textMaxWidth);
@@ -178,7 +213,7 @@ export async function generateCheckinExportImage({
     ctx,
     bodyLines,
     TEXT_MARGIN_X,
-    photoBottom + TEXT_MARGIN_TOP,
+    Math.max(photoBottom + TEXT_MARGIN_TOP, textY + 40),
     textMaxWidth,
     TEXT_FONT_SIZE * TEXT_LINE_HEIGHT,
   );
