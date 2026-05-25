@@ -12,9 +12,10 @@ import { API_URL } from '@/lib/config';
 import { getDarkScreenBrightness } from '@/lib/darkBrightness';
 import type { NewCheckinPayload } from '@/lib/types';
 
-const DISPLAY_MS = 10000;
+const DARK_SCREEN_MS = 20000;
+const LIGHT_SCREEN_MS = 15000;
+const THANK_YOU_MS = 10000;
 const GAP_MS = 3000;
-const ROTATE_MS = 30000;
 const SCREEN_LAYER_MS = 800;
 
 type ScreenMode = 'dark' | 'bright';
@@ -118,7 +119,7 @@ export default function DisplayPage() {
           processQueueRef.current?.();
         }, GAP_MS);
       }, SCREEN_LAYER_MS);
-    }, DISPLAY_MS);
+    }, THANK_YOU_MS);
   }, []);
 
   useEffect(() => {
@@ -160,9 +161,11 @@ export default function DisplayPage() {
       return;
     }
 
+    const rotateMs = screenMode === 'dark' ? DARK_SCREEN_MS : LIGHT_SCREEN_MS;
+
     rotateTimerRef.current = setTimeout(() => {
       setScreenMode((prev) => (prev === 'dark' ? 'bright' : 'dark'));
-    }, ROTATE_MS);
+    }, rotateMs);
 
     return () => clearRotateTimer();
   }, [rotationEnabled, celebration, screenMode, qrModalOpen]);
