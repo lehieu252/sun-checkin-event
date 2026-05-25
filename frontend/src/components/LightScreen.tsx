@@ -63,23 +63,30 @@ export function LightScreen({
         )}
       </div>
 
+      <Image
+        src="/we_are_made_of_sun.svg"
+        alt="We are made of sun"
+        width={283}
+        height={251}
+        className="light-sun-slogan-left"
+        priority
+      />
+
       <div className="light-sun-area">
         <div className="sun-inner sun-inner--bobbing sun-inner--light">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/sun_dark.svg" alt="" className="light-sun-svg" />
-          <div className="light-sun-overlay">
-            <Image
-              src="/we_are_made_of_sun.svg"
-              alt="We are made of sun"
-              width={298}
-              height={264}
-              className="light-sun-slogan-img"
-              priority
-            />
-            <p className="light-plug-in-slogan">{t('display.darkPlugInSlogan')}</p>
-          </div>
         </div>
       </div>
+
+      <Image
+        src="/nhan_ket_noi_bat_thay_doi_vi.svg"
+        alt={t('display.darkPlugInSlogan')}
+        width={355}
+        height={142}
+        className="light-plug-in-right"
+        priority
+      />
 
       <div className="light-screen-footer">
         <DarkOdometerCounter count={count} digits={4} />

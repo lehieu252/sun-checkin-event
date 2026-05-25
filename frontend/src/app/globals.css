@@ -333,56 +333,50 @@ body {
   background: transparent;
 }
 
+.light-sun-slogan-left {
+  position: absolute;
+  left: 200px;
+  top: 552px;
+  z-index: 4;
+  width: 283px;
+  height: 251px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.light-plug-in-right {
+  position: absolute;
+  left: 1048px;
+  top: 600px;
+  z-index: 4;
+  width: 355px;
+  height: 142px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
 .light-sun-area {
   position: absolute;
-  top: 240px;
-  left: 379px;
+  top: 350px;
+  left: 465px;
   z-index: 3;
-  width: 860px;
-  height: 850px;
+  width: 600px;
+  height: 600px;
   pointer-events: none;
 }
 
 .sun-inner--light {
   position: relative;
-  width: 860px;
-  height: 850px;
+  width: 600px;
+  height: 600px;
 }
 
 .light-sun-svg {
   display: block;
-  width: 860px;
-  height: 850px;
+  width: 600px;
+  height: 600px;
   object-fit: contain;
   background: transparent;
-  opacity: 0.7;
-}
-
-.light-sun-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0 24px;
-}
-
-.light-sun-slogan-img {
-  width: 298px;
-  height: 264px;
-  object-fit: contain;
-}
-
-.light-plug-in-slogan {
-  margin: 12px 0 0;
-  padding: 0;
-  font-family: var(--font-gilroy), var(--font-google-sans), sans-serif;
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 1.2;
-  color: #3f1700;
-  text-align: center;
 }
 
 .light-screen-footer {
