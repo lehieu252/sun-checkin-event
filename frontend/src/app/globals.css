@@ -1437,21 +1437,46 @@ body {
   height: 100vh;
   overflow: hidden;
   background: #000;
+  --screen-layer-ms: 800ms;
 }
 
 .screen-layer {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.8s ease;
+  visibility: hidden;
   pointer-events: none;
   z-index: 1;
+  contain: layout style paint;
+  transition:
+    opacity var(--screen-layer-ms) ease,
+    visibility 0s linear var(--screen-layer-ms);
 }
 
 .screen-layer--active {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   z-index: 2;
+  transition:
+    opacity var(--screen-layer-ms) ease,
+    visibility 0s linear 0s;
+}
+
+/* Pause heavy animations while a layer is hidden (including during crossfade-out). */
+.screen-layer:not(.screen-layer--active) .sun-inner--bobbing,
+.screen-layer:not(.screen-layer--active) .gallery-col-strip,
+.screen-layer:not(.screen-layer--active) .thank-you-screen,
+.screen-layer:not(.screen-layer--active) .thank-you-copy--rise {
+  animation-play-state: paused;
+}
+
+.screen-layer:not(.screen-layer--active) .gallery-col-strip {
+  will-change: auto;
+}
+
+.screen-layer:not(.screen-layer--active) {
+  content-visibility: auto;
 }
 
 .screen-layer--bright .display-main {

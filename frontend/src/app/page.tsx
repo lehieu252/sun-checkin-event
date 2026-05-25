@@ -10,13 +10,13 @@ import { LightScreen } from '@/components/LightScreen';
 import { ThankYou } from '@/components/ThankYou';
 import { API_URL } from '@/lib/config';
 import { getDarkScreenBrightness } from '@/lib/darkBrightness';
+import { SCREEN_LAYER_MS } from '@/lib/displayConstants';
 import type { NewCheckinPayload } from '@/lib/types';
 
 const DARK_SCREEN_MS = 20000;
 const LIGHT_SCREEN_MS = 15000;
 const THANK_YOU_MS = 10000;
 const GAP_MS = 3000;
-const SCREEN_LAYER_MS = 800;
 
 type ScreenMode = 'dark' | 'bright';
 
@@ -55,9 +55,18 @@ export default function DisplayPage() {
   const countRef = useRef(0);
   const lastCelebrationRef = useRef<Celebration | null>(null);
 
+  const celebrating = celebration !== null;
+  const showThankYouLayer = celebrating && !celebrationFadingOut;
+  const showDarkLayer = screenMode === 'dark' && !celebrating;
+  const showBrightLayer =
+    screenMode === 'bright' && (!celebrating || celebrationFadingOut);
+
   useEffect(() => {
+    if (!showDarkLayer) return;
+
     const el = darkPlaceholderRef.current;
     if (!el) return;
+
     const update = () => {
       const r = el.getBoundingClientRect();
       setDarkSunPos({
@@ -69,7 +78,7 @@ export default function DisplayPage() {
     const ro = new ResizeObserver(update);
     ro.observe(document.documentElement);
     return () => ro.disconnect();
-  }, [screenMode]);
+  }, [showDarkLayer]);
 
   const clearRotateTimer = () => {
     if (rotateTimerRef.current) {
@@ -234,15 +243,16 @@ export default function DisplayPage() {
     };
   }, [enqueueCelebration, resetDisplay]);
 
-  const celebrating = celebration !== null;
-  const showThankYouLayer = celebrating && !celebrationFadingOut;
-  const showDarkLayer = screenMode === 'dark' && !celebrating;
-  const showBrightLayer =
-    screenMode === 'bright' && (!celebrating || celebrationFadingOut);
   const darkBrightness = getDarkScreenBrightness(count);
 
   return (
-    <div ref={displayRootRef} className="display-root">
+    <div
+      ref={displayRootRef}
+      className="display-root"
+      style={
+        { '--screen-layer-ms': `${SCREEN_LAYER_MS}ms` } as React.CSSProperties
+      }
+    >
       <DisplayKioskPrompt containerRef={displayRootRef} />
       <LanguageSwitcher variant="display" />
 
