@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * Insert fake check-ins directly into SQLite for brightness testing.
+ * Insert fake check-ins directly into SQLite for brightness / gallery testing.
  *
- * Brightness formula (same as frontend):
- *   50% base + 1% every 3 check-ins (max 100%)
+ * Brightness formula (same as frontend getDarkScreenBrightness):
+ *   30% base + 1% every 2 check-ins (max 200%)
  *
  * Usage:
  *   node scripts/seed-fake-checkins.mjs
- *   node scripts/seed-fake-checkins.mjs --count=30
- *   node scripts/seed-fake-checkins.mjs --reset --count=15
+ *   node scripts/seed-fake-checkins.mjs --count=1000
+ *   node scripts/seed-fake-checkins.mjs --reset --count=1000
  *   node scripts/seed-fake-checkins.mjs --db=./checkin.db
  *
  * After seeding, refresh http://localhost:3000 to see updated brightness.
@@ -16,11 +16,13 @@
  */
 
 import Database from 'better-sqlite3';
+import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_DB = join(__dirname, '..', 'checkin.db');
+const UPLOADS_DIR = join(__dirname, '..', 'uploads');
 
 const NAMES = [
   'Minh Anh',
@@ -46,7 +48,8 @@ const MESSAGES = [
   'Kết nối để lan tỏa ánh sáng.',
 ];
 
-const FAKE_PHOTO = 'fake-seed.png';
+/** Must exist in backend/uploads/ — reused for all seeded rows (browser caches one file). */
+const FAKE_PHOTO = '1779565546510-509794662.PNG';
 
 function parseArgs(argv) {
   const options = {
@@ -96,8 +99,8 @@ After running, refresh the display page to see brightness change.
 }
 
 function getDarkScreenBrightness(checkinCount) {
-  const steps = Math.floor(checkinCount / 3);
-  return Math.min(0.5 + steps * 0.01, 1);
+  const steps = Math.floor(checkinCount / 2);
+  return Math.min(0.3 + steps * 0.01, 2);
 }
 
 function formatBrightness(value) {
@@ -149,6 +152,15 @@ function main() {
   console.log('☀️  Fake check-in DB seeder');
   console.log(`   DB:    ${dbPath}`);
   console.log(`   Count: ${count}`);
+  console.log(`   Photo: ${FAKE_PHOTO}`);
+
+  const photoPath = join(UPLOADS_DIR, FAKE_PHOTO);
+  if (!existsSync(photoPath)) {
+    console.warn('');
+    console.warn(`⚠️  Photo not found: ${photoPath}`);
+    console.warn('   Copy the file into backend/uploads/ before opening the display page.');
+  }
+
   console.log('');
 
   let db;
@@ -183,10 +195,10 @@ function main() {
     console.log(`✅ Done. ${finalCount} total check-ins → brightness ${formatBrightness(finalBrightness)}`);
     console.log('');
     console.log('Brightness reference:');
-    console.log('  0–2 check-ins  → 50%');
-    console.log('  3–5 check-ins  → 51%');
-    console.log('  6–8 check-ins  → 52%');
-    console.log('  ... +1% every 3 check-ins, max 100% at 150+');
+    console.log('  0–1 check-ins  → 30%');
+    console.log('  2–3 check-ins  → 31%');
+    console.log('  4–5 check-ins  → 32%');
+    console.log('  ... +1% every 2 check-ins, max 200%');
   } finally {
     db.close();
   }

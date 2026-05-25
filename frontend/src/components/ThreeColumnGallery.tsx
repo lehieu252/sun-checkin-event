@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { memo, useMemo } from 'react';
 import { API_URL } from '@/lib/config';
 import type { NewCheckinPayload } from '@/lib/types';
 
@@ -17,6 +17,8 @@ const GALLERY_LAYOUT = {
   },
 } as const;
 
+/** Only the newest N entries are rendered; counter/brightness still use full count. */
+const GALLERY_MAX_ITEMS = 90;
 const PX_PER_SEC = 40;
 
 interface ThreeColumnGalleryProps {
@@ -33,7 +35,7 @@ function splitIntoColumns(items: NewCheckinPayload[]) {
   return cols;
 }
 
-function Column({
+const Column = memo(function Column({
   items,
   direction,
   galleryEpoch,
@@ -76,12 +78,13 @@ function Column({
             className={`gallery-entry${checkin.id === highlightId ? ' gallery-entry--highlight' : ''}`}
           >
             <div className="gallery-photo-card">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={`${API_URL}${checkin.photoUrl}`}
                 alt={checkin.name}
-                fill
-                className="object-cover"
-                unoptimized
+                className="gallery-photo-img"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div
@@ -96,7 +99,7 @@ function Column({
       </div>
     </div>
   );
-}
+});
 
 export function ThreeColumnGallery({
   checkins,
@@ -104,7 +107,14 @@ export function ThreeColumnGallery({
   highlightId,
   variant = 'default',
 }: ThreeColumnGalleryProps) {
-  const columns = splitIntoColumns(checkins);
+  const galleryCheckins = useMemo(
+    () => checkins.slice(0, GALLERY_MAX_ITEMS),
+    [checkins],
+  );
+  const columns = useMemo(
+    () => splitIntoColumns(galleryCheckins),
+    [galleryCheckins],
+  );
 
   return (
     <div
