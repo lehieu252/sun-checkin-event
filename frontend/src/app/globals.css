@@ -377,6 +377,7 @@ body {
   height: 600px;
   object-fit: contain;
   background: transparent;
+  transition: opacity 0.8s ease;
 }
 
 .light-screen-footer {
