@@ -12,8 +12,8 @@ import { API_URL } from '@/lib/config';
 import { getDarkScreenBrightness } from '@/lib/darkBrightness';
 import type { NewCheckinPayload } from '@/lib/types';
 
-const DARK_SCREEN_MS = 200000;
-const LIGHT_SCREEN_MS = 15000;
+const DARK_SCREEN_MS = 20000;
+const LIGHT_SCREEN_MS = 150000;
 const THANK_YOU_MS = 10000;
 const GAP_MS = 3000;
 const SCREEN_LAYER_MS = 800;

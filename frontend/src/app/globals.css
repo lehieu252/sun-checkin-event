@@ -409,13 +409,18 @@ body {
   line-height: 1.2;
 }
 
+.light-screen-footer .dark-odometer-row {
+  gap: 50px;
+}
+
 .light-screen-footer .dark-odometer-digit-box {
-  width: 180px;
-  height: 192px;
+  width: 150px;
+  height: 161px;
+  border-radius: 30px;
 }
 
 .light-screen-footer .dark-odometer-digit-text {
-  font-size: 92px;
+  font-size: 78px;
 }
 
 .light-screen-copy {

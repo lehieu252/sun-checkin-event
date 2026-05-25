@@ -107,7 +107,7 @@ export function LightScreen({
       )}
 
       <div className="light-screen-footer">
-        <DarkOdometerCounter count={count} digits={4} />
+        <DarkOdometerCounter count={count * 100} digits={6} />
         <div className="light-odometer-label">
           {t('display.darkCounterLabel')}
         </div>

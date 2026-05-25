@@ -23,7 +23,7 @@ const vi = {
     darkRightParagraph1:
       'Mặt Trời là nơi sự sống bắt đầu - nguồn năng lượng tạo nên thế giới hữu hình và nuôi dưỡng mọi chuyển động của tương lai.',
     darkRightParagraph2:
-      'Sự hiện diện của bạn tại đây là một đơn vị ánh sáng được thêm vào hành trình ấy, để những kết nối nhỏ cùng tạo nên thay đổi bền vững.',
+      'Sự hiện diện của bạn tại đây là 100 đơn vị ánh sáng được thêm vào hành trình ấy, để những kết nối nhỏ cùng tạo nên thay đổi bền vững.',
     darkHeadline1: 'Mặt Trời là khởi nguồn của sự sống.',
     darkHeadline2:
       'Nhưng điều gì giúp Mặt Trời duy trì được năng lượng bền vững?',
@@ -86,7 +86,7 @@ const en = {
     darkRightParagraph1:
       'The Sun is where life begins a source of energy that shapes the visible world and powers the future.',
     darkRightParagraph2:
-      'Your presence here becomes a unit of light added to that journey, where small connections come together to create sustainable change.',
+      'Your presence here becomes 100 units of light added to that journey, where small connections come together to create sustainable change.',
     darkHeadline1: 'The Sun is the source of life.',
     darkHeadline2: 'But what keeps its energy alive and enduring?',
     darkBody3Part1:
