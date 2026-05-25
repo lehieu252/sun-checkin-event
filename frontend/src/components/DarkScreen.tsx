@@ -76,6 +76,16 @@ export function DarkScreen({
         </div>
       </div>
 
+      <Image
+        src="/mask.svg"
+        alt=""
+        width={1578.5}
+        height={1280}
+        className="dark-sun-mask"
+        aria-hidden="true"
+        priority
+      />
+
       <div className="dark-screen-sun-area">
         <div ref={placeholderRef} className="dark-sun-placeholder" />
       </div>

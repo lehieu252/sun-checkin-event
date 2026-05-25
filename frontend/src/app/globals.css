@@ -1762,7 +1762,21 @@ body {
   transform: none;
 }
 
+.dark-sun-mask {
+  position: absolute;
+  top: -502px;
+  left: 1547px;
+  z-index: 0;
+  width: 3000px;
+  height: 2800px;
+  pointer-events: none;
+  object-fit: contain;
+  opacity: 0.3;
+}
+
 .dark-sun-placeholder {
+  position: relative;
+  z-index: 1;
   width: 1578.5px;
   height: 1280px;
   flex-shrink: 0;
