@@ -23,7 +23,7 @@ export function LightScreen({
   highlightId,
   onQrOpen,
 }: LightScreenProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const sunOpacity = getLightScreenSunOpacity(count);
 
   return (
@@ -86,14 +86,25 @@ export function LightScreen({
         </div>
       </div>
 
-      <Image
-        src="/nhan_ket_noi_bat_thay_doi_vi.svg"
-        alt={t('display.darkPlugInSlogan')}
-        width={355}
-        height={142}
-        className="light-plug-in-right"
-        priority
-      />
+      {locale === 'en' ? (
+        <Image
+          src="/plug_into_evolution_3.svg"
+          alt={t('display.darkPlugInSlogan')}
+          width={350}
+          height={148}
+          className="light-plug-in-right light-plug-in-right--en"
+          priority
+        />
+      ) : (
+        <Image
+          src="/nhan_ket_noi_bat_thay_doi_vi.svg"
+          alt={t('display.darkPlugInSlogan')}
+          width={355}
+          height={142}
+          className="light-plug-in-right"
+          priority
+        />
+      )}
 
       <div className="light-screen-footer">
         <DarkOdometerCounter count={count} digits={4} />
