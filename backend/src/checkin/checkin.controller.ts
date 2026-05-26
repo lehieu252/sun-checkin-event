@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -106,6 +108,12 @@ export class CheckinController {
       photoUrl: `/uploads/${c.photoPath}`,
       createdAt: c.createdAt,
     }));
+  }
+
+  @Delete(':id')
+  async deleteOne(@Param('id', ParseIntPipe) id: number) {
+    const count = await this.checkinService.deleteById(id);
+    return { success: true, id, count };
   }
 
   @Delete()

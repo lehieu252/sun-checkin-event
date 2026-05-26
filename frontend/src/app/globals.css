@@ -1413,6 +1413,17 @@ body {
   opacity: 0.9;
 }
 
+.admin-delete-btn {
+  background: #fff;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.admin-delete-btn:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
 .admin-error {
   background: #fee2e2;
   color: #b91c1c;

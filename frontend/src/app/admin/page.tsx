@@ -9,6 +9,7 @@ export default function AdminPage() {
   const [checkins, setCheckins] = useState<NewCheckinPayload[]>([]);
   const [loading, setLoading] = useState(true);
   const [resetting, setResetting] = useState(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -30,6 +31,31 @@ export default function AdminPage() {
   useEffect(() => {
     fetchCheckins();
   }, [fetchCheckins]);
+
+  const handleDelete = async (checkin: NewCheckinPayload) => {
+    const confirmed = window.confirm(
+      `Bạn có chắc muốn xoá check-in của "${checkin.name}"? Hành động này không thể hoàn tác.`,
+    );
+    if (!confirmed) return;
+
+    setDeletingId(checkin.id);
+    setError('');
+    setSuccess('');
+
+    try {
+      const res = await fetch(`${API_URL}/checkins/${checkin.id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error('Xoá check-in thất bại');
+
+      setCheckins((prev) => prev.filter((item) => item.id !== checkin.id));
+      setSuccess(`Đã xoá check-in của ${checkin.name}.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Có lỗi xảy ra');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const handleReset = async () => {
     const confirmed = window.confirm(
@@ -115,6 +141,7 @@ export default function AdminPage() {
                     <th className="px-6 py-3">Tên</th>
                     <th className="px-6 py-3">Lời nhắn</th>
                     <th className="px-6 py-3">Thời gian</th>
+                    <th className="px-6 py-3">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -136,6 +163,16 @@ export default function AdminPage() {
                       <td className="max-w-xs px-6 py-4">{checkin.message}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-xs">
                         {formatDate(checkin.createdAt)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(checkin)}
+                          disabled={deletingId === checkin.id}
+                          className="admin-delete-btn rounded-lg px-3 py-2 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {deletingId === checkin.id ? 'Đang xoá...' : 'Xoá'}
+                        </button>
                       </td>
                     </tr>
                   ))}

@@ -24,4 +24,8 @@ export class CheckinGateway {
   broadcastReset() {
     this.server.emit('reset-checkins');
   }
+
+  broadcastDeleteCheckin(payload: { id: number; count: number }) {
+    this.server.emit('delete-checkin', payload);
+  }
 }

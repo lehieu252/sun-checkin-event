@@ -234,6 +234,13 @@ export default function DisplayPage() {
       resetDisplay();
     });
 
+    socket.on('delete-checkin', ({ id, count }: { id: number; count: number }) => {
+      countRef.current = count;
+      setCount(count);
+      setCheckins((prev) => prev.filter((checkin) => checkin.id !== id));
+      setHighlightId((current) => (current === id ? null : current));
+    });
+
     return () => {
       socket.disconnect();
       clearTimer();

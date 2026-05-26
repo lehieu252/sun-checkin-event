@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { existsSync } from 'fs';
 import { unlink } from 'fs/promises';
@@ -63,5 +63,22 @@ export class CheckinService {
 
     await this.checkinRepository.clear();
     this.checkinGateway.broadcastReset();
+  }
+
+  async deleteById(id: number): Promise<number> {
+    const checkin = await this.checkinRepository.findOne({ where: { id } });
+    if (!checkin) {
+      throw new NotFoundException('Check-in not found');
+    }
+
+    const filePath = join(uploadsDir, checkin.photoPath);
+    if (existsSync(filePath)) {
+      await unlink(filePath).catch(() => undefined);
+    }
+
+    await this.checkinRepository.remove(checkin);
+    const count = await this.getCount();
+    this.checkinGateway.broadcastDeleteCheckin({ id, count });
+    return count;
   }
 }
