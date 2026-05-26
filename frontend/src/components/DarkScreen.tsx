@@ -6,13 +6,11 @@ import { SlideToCheckIn } from '@/components/SlideToCheckIn';
 import { useLanguage } from '@/lib/i18n/context';
 
 interface DarkScreenProps {
-  brightness: number;
   placeholderRef: RefObject<HTMLDivElement | null>;
   onSlideComplete: () => void;
 }
 
 export function DarkScreen({
-  brightness,
   placeholderRef,
   onSlideComplete,
 }: DarkScreenProps) {
@@ -20,10 +18,7 @@ export function DarkScreen({
 
   return (
     <div className="dark-screen">
-      <div
-        className="dark-screen-bg-wrap"
-        style={{ filter: `brightness(${brightness})` }}
-      >
+      <div className="dark-screen-bg-wrap dark-screen-bg-wrap--bobbing">
         <Image
           src="/background_dark.png"
           alt=""

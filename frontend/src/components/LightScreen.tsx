@@ -5,7 +5,6 @@ import { DarkOdometerCounter } from '@/components/DarkOdometerCounter';
 import { SlideToCheckIn } from '@/components/SlideToCheckIn';
 import { ThreeColumnGallery } from '@/components/ThreeColumnGallery';
 import { useLanguage } from '@/lib/i18n/context';
-import { getLightScreenSunOpacity } from '@/lib/darkBrightness';
 import type { NewCheckinPayload } from '@/lib/types';
 
 interface LightScreenProps {
@@ -24,7 +23,6 @@ export function LightScreen({
   onQrOpen,
 }: LightScreenProps) {
   const { t, locale } = useLanguage();
-  const sunOpacity = getLightScreenSunOpacity(count);
 
   return (
     <main className="display-main">
@@ -81,7 +79,6 @@ export function LightScreen({
             src="/sun_dark.svg"
             alt=""
             className="light-sun-svg"
-            style={{ opacity: sunOpacity }}
           />
         </div>
       </div>

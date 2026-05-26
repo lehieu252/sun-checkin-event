@@ -9,7 +9,6 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { LightScreen } from '@/components/LightScreen';
 import { ThankYou } from '@/components/ThankYou';
 import { API_URL } from '@/lib/config';
-import { getDarkScreenBrightness } from '@/lib/darkBrightness';
 import { SCREEN_LAYER_MS } from '@/lib/displayConstants';
 import type { NewCheckinPayload } from '@/lib/types';
 
@@ -243,8 +242,6 @@ export default function DisplayPage() {
     };
   }, [enqueueCelebration, resetDisplay]);
 
-  const darkBrightness = getDarkScreenBrightness(count);
-
   return (
     <div
       ref={displayRootRef}
@@ -260,7 +257,6 @@ export default function DisplayPage() {
         className={`screen-layer screen-layer--dark${showDarkLayer ? ' screen-layer--active' : ''}`}
       >
         <DarkScreen
-          brightness={darkBrightness}
           placeholderRef={darkPlaceholderRef}
           onSlideComplete={() => {
             clearRotateTimer();
@@ -277,10 +273,7 @@ export default function DisplayPage() {
               transform: 'translate(-50%, -50%) scale(1)',
             }}
           >
-            <div
-              className="sun-inner sun-inner--bobbing dark-sun-brightness"
-              style={{ filter: `brightness(${darkBrightness})` }}
-            >
+            <div className="sun-inner sun-inner--dark-bobbing">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/sun_dark.svg" alt="Sun" className="dark-sun-svg" />
             </div>

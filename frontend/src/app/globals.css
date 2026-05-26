@@ -325,6 +325,22 @@ body {
   }
 }
 
+.sun-inner--dark-bobbing {
+  animation: darkSunBob 4s ease-in-out infinite;
+}
+
+@keyframes darkSunBob {
+  0%,
+  100% {
+    transform: translateY(12px);
+    filter: brightness(0.4);
+  }
+  50% {
+    transform: translateY(-12px);
+    filter: brightness(1.2);
+  }
+}
+
 .sun-svg {
   display: block;
   width: 570px;
@@ -383,7 +399,6 @@ body {
   height: 600px;
   object-fit: contain;
   background: transparent;
-  transition: opacity 0.8s ease;
 }
 
 .light-screen-footer {
@@ -454,9 +469,11 @@ body {
   0%,
   100% {
     transform: translateY(12px);
+    opacity: 0.5;
   }
   50% {
     transform: translateY(-12px);
+    opacity: 1;
   }
 }
 
@@ -1465,6 +1482,8 @@ body {
 
 /* Pause heavy animations while a layer is hidden (including during crossfade-out). */
 .screen-layer:not(.screen-layer--active) .sun-inner--bobbing,
+.screen-layer:not(.screen-layer--active) .sun-inner--dark-bobbing,
+.screen-layer:not(.screen-layer--active) .dark-screen-bg-wrap--bobbing,
 .screen-layer:not(.screen-layer--active) .gallery-col-strip,
 .screen-layer:not(.screen-layer--active) .thank-you-screen,
 .screen-layer:not(.screen-layer--active) .thank-you-copy--rise {
@@ -1503,15 +1522,24 @@ body {
   position: absolute;
   inset: 0;
   z-index: 0;
-  transition: filter 0.8s ease;
+}
+
+.dark-screen-bg-wrap--bobbing {
+  animation: darkBgBobBrightness 4s ease-in-out infinite;
+}
+
+@keyframes darkBgBobBrightness {
+  0%,
+  100% {
+    filter: brightness(0.3);
+  }
+  50% {
+    filter: brightness(0.65);
+  }
 }
 
 .dark-screen-bg {
   z-index: 0;
-}
-
-.dark-sun-brightness {
-  transition: filter 0.8s ease;
 }
 
 .dark-screen-header {
