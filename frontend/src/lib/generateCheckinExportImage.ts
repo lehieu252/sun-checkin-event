@@ -14,7 +14,7 @@ const NAME_CENTER_Y = 888;
 const NAME_LINE_HEIGHT = 1.35;
 
 const TEMPLATE_VI_URL = '/template_vi.png';
-const TEMPLATE_EN_URL = '/template_vi.png';
+const TEMPLATE_EN_URL = '/template_en.png';
 const OVERLAY_URL = '/template_2.png';
 const FONT_SEMIBOLD_URL = '/fonts/SVN-Gilroy-SemiBold.otf';
 
