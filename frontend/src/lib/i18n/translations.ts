@@ -58,6 +58,8 @@ const vi = {
     exportShare: 'Chia sẻ / Lưu ảnh',
     exportError: 'Không thể tạo ảnh. Vui lòng thử lại.',
     validationError: 'Vui lòng điền đầy đủ thông tin và chọn ảnh',
+    profanityError:
+      'Tên hoặc lời nhắn chứa từ ngữ không phù hợp. Vui lòng chỉnh sửa và thử lại.',
     submitError: 'Check-in thất bại',
     genericError: 'Có lỗi xảy ra, vui lòng thử lại',
   },
@@ -120,6 +122,8 @@ const en = {
     exportShare: 'Share / Save image',
     exportError: 'Could not create image. Please try again.',
     validationError: 'Please fill in all fields and select a photo',
+    profanityError:
+      'Your name or message contains inappropriate language. Please edit and try again.',
     submitError: 'Check-in failed',
     genericError: 'Something went wrong, please try again',
   },
@@ -175,6 +179,7 @@ export type TranslationTree = {
     exportShare: string;
     exportError: string;
     validationError: string;
+    profanityError: string;
     submitError: string;
     genericError: string;
   };

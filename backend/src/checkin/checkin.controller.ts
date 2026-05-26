@@ -13,6 +13,10 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import { CheckinService } from './checkin.service';
+import {
+  containsProfanityInFields,
+  PROFANITY_ERROR_CODE,
+} from './profanity.utils';
 
 const uploadsDir = join(process.cwd(), 'uploads');
 
@@ -60,9 +64,21 @@ export class CheckinController {
       throw new BadRequestException('Photo is required');
     }
 
+    const trimmedName = name.trim();
+    const trimmedMessage = message.trim();
+
+    if (
+      containsProfanityInFields({
+        name: trimmedName,
+        message: trimmedMessage,
+      })
+    ) {
+      throw new BadRequestException(PROFANITY_ERROR_CODE);
+    }
+
     const checkin = await this.checkinService.create(
-      name.trim(),
-      message.trim(),
+      trimmedName,
+      trimmedMessage,
       file.filename,
     );
 

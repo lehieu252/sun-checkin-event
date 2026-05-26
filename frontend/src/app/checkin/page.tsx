@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { CheckinLanguagePicker } from '@/components/CheckinLanguagePicker';
 import { API_URL } from '@/lib/config';
 import { generateCheckinExportImage } from '@/lib/generateCheckinExportImage';
+import { containsProfanity } from '@/lib/profanityFilter';
 import {
   isMobileExportDevice,
   saveCheckinExportImage,
@@ -99,8 +100,20 @@ export default function CheckinPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !message.trim() || !photo) {
+    const trimmedName = name.trim();
+    const trimmedMessage = message.trim();
+
+    if (!trimmedName || !trimmedMessage || !photo) {
       setErrorMsg(t('checkin.validationError'));
+      setStatus('error');
+      return;
+    }
+
+    if (
+      containsProfanity(trimmedName) ||
+      containsProfanity(trimmedMessage)
+    ) {
+      setErrorMsg(t('checkin.profanityError'));
       setStatus('error');
       return;
     }
@@ -109,8 +122,8 @@ export default function CheckinPage() {
     setErrorMsg('');
 
     const formData = new FormData();
-    formData.append('name', name.trim());
-    formData.append('message', message.trim());
+    formData.append('name', trimmedName);
+    formData.append('message', trimmedMessage);
     formData.append('photo', photo);
 
     try {
@@ -123,12 +136,19 @@ export default function CheckinPage() {
         const err = await res.json().catch(() => ({}));
         const msg = (err as { message?: string | string[] }).message;
         const text = Array.isArray(msg) ? msg.join(', ') : msg;
+        if (text === 'profanity_detected') {
+          throw new Error('profanity_detected');
+        }
         throw new Error(text || t('checkin.submitError'));
       }
 
       setStatus('success');
     } catch (err) {
       setStatus('error');
+      if (err instanceof Error && err.message === 'profanity_detected') {
+        setErrorMsg(t('checkin.profanityError'));
+        return;
+      }
       setErrorMsg(
         err instanceof Error ? err.message : t('checkin.genericError'),
       );
