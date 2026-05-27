@@ -67,8 +67,6 @@ export const PROFANITY_TERMS = [
   'du ma',
   'du me',
   'dume',
-  'ngusi',
-  'ngu si',
   'sucvat',
   'suc vat',
   'thangcho',
